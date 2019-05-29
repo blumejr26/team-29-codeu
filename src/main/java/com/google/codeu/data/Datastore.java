@@ -16,11 +16,7 @@
 
 package com.google.codeu.data;
 
-import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.PreparedQuery;
-import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import java.util.ArrayList;
@@ -78,5 +74,14 @@ public class Datastore {
     }
 
     return messages;
+  }
+
+  /* Returns the total number of messages for all users. */
+
+  public int getTotalMessageCount(){
+    Query query = new Query("Message");
+    PreparedQuery results = datastore.prepare(query);
+    return results.countEntities(FetchOptions.Builder.withLimit(1000)); 
+
   }
 }
