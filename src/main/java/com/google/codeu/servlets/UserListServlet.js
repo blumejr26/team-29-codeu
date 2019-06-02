@@ -1,4 +1,3 @@
-user-list-servlet.js
 
 /*
  * Copyright 2019 Google Inc.
