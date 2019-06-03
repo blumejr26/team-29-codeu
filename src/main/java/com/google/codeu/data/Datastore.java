@@ -81,6 +81,35 @@ public class Datastore {
     return messages;
   }
 
+  /**
+   * Gets messages posted by all users
+   *
+   * @return a list of messages posted by all users. List is sorted by time
+   *     descending.
+   */
+  public List<Message> getAllMessages() {
+    List<Message> messages = new ArrayList<>();
+
+    Query query = new Query("Message").addSort("timestamp", SortDirection.DESCENDING);
+    PreparedQuery results = datastore.prepare(query);
+
+    for (Entity entity : results.asIterable()) {
+      try {
+        String user = (String) entity.getProperty("user");
+        List<Message> userMessages = getMessages(user);
+        for (Message message : userMessages) {
+            messages.add(message);
+        }
+      } catch (Exception e) {
+        System.err.println("Error reading user messages.");
+        System.err.println(entity.toString());
+        e.printStackTrace();
+      }
+    }
+
+    return messages;
+  }
+
   /* Returns the total number of messages for all users. */
 
   public int getTotalMessageCount(){
@@ -89,4 +118,5 @@ public class Datastore {
     return results.countEntities(FetchOptions.Builder.withLimit(1000));
 
   }
+
 }
