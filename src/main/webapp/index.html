@@ -25,9 +25,18 @@ limitations under the License.
   <script>
     function createMap(){
       const map = new google.maps.Map(document.getElementById('map'), {
-        center: {lat: 37.422, lng: -122.084},
+        center: {lat: 40.4428, lng: -79.943},
         zoom: 16
       });
+      const marker = new google.maps.Marker({
+        position: {lat: 40.4428, lng: -79.943},
+        map: map,
+        title: 'Walking to the Sky'
+      });
+      var infoWindow = new google.maps.InfoWindow({
+        content: 'This is CMU\'s "Walking to the Sky" sculpture.'
+      });
+      infoWindow.open(map, marker);
     }
     function start() {
       addLoginOrLogoutLinkToNavigation();
