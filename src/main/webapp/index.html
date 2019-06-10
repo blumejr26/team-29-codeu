@@ -23,12 +23,13 @@ limitations under the License.
   <script src="/js/navigation-loader.js"></script>
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCTRQ-3PrBBM1ZUThSjUE6p6Zet1sjcapk"></script>
   <script>
-    function createMarker(lat, lng, map, title, info) {
+    function createMarker(lat, lng, map, title, img) {
       const marker = new google.maps.Marker({
         position: {lat: lat, lng: lng},
         map: map,
         title: title
       });
+      var info = '<h3>'+title+'</h3>'+'<img src="'+img+'">';
       var infoWindow = new google.maps.InfoWindow({
         content: info
       });
@@ -38,13 +39,16 @@ limitations under the License.
       marker.addListener('mouseout', function() {
         infoWindow.close(map, marker);
       });
+      marker.addListener('click', function() {
+        infoWindow.open(map, marker);
+      });
     }
     function createMap(){
       const map = new google.maps.Map(document.getElementById('map'), {
         center: {lat: 40.4428, lng: -79.943},
-        zoom: 16
+        zoom: 14
       });
-      createMarker(40.4428, -79.943, map, 'Walking to the Sky', 'This is CMU\'s "Walking to the Sky" sculpture.');
+      createMarker(40.4428, -79.943, map, 'Walking to the Sky', 'https://images.app.goo.gl/YhEMZxAgDdxrDZWe7');
     }
     function start() {
       addLoginOrLogoutLinkToNavigation();
