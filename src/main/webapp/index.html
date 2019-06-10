@@ -23,20 +23,28 @@ limitations under the License.
   <script src="/js/navigation-loader.js"></script>
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCTRQ-3PrBBM1ZUThSjUE6p6Zet1sjcapk"></script>
   <script>
+    function createMarker(lat, lng, map, title, info) {
+      const marker = new google.maps.Marker({
+        position: {lat: lat, lng: lng},
+        map: map,
+        title: title
+      });
+      var infoWindow = new google.maps.InfoWindow({
+        content: info
+      });
+      marker.addListener('mouseover', function() {
+        infoWindow.open(map, marker);
+      });
+      marker.addListener('mouseout', function() {
+        infoWindow.close(map, marker);
+      });
+    }
     function createMap(){
       const map = new google.maps.Map(document.getElementById('map'), {
         center: {lat: 40.4428, lng: -79.943},
         zoom: 16
       });
-      const marker = new google.maps.Marker({
-        position: {lat: 40.4428, lng: -79.943},
-        map: map,
-        title: 'Walking to the Sky'
-      });
-      var infoWindow = new google.maps.InfoWindow({
-        content: 'This is CMU\'s "Walking to the Sky" sculpture.'
-      });
-      infoWindow.open(map, marker);
+      createMarker(40.4428, -79.943, map, 'Walking to the Sky', 'This is CMU\'s "Walking to the Sky" sculpture.');
     }
     function start() {
       addLoginOrLogoutLinkToNavigation();
