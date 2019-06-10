@@ -1,4 +1,4 @@
-<!--
+    <!--
 Copyright 2019 Google Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,24 +16,62 @@ limitations under the License.
 
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <title>CodeU 2019 Starter Project</title>
-    <link rel="stylesheet" href="/css/main.css">
-    <script src="/js/navigation-loader.js"></script>
-  </head>
-  <body onload="addLoginOrLogoutLinkToNavigation();">
-    <nav>
-      <ul id="navigation">
-        <li><a href="/">Home</a></li>
-        <li><a href="/aboutus.html">About Our Team</a></li>
-      </ul>
-    </nav>
-    <h1>CodeU Starter Project</h1>
-    <p>This is the CodeU starter project. Click the links above to login and visit your page.
-    You can post messages on your page, and you can visit other user pages if you have
-    their URL.</p>
-    <p>This is your code now! Feel free to make changes, and don't be afraid to get creative!
-    You could start by modifying this page to tell the world more about your team.</p>
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <title>CodeU 2019 Starter Project</title>
+  <link rel="stylesheet" href="/css/main.css">
+  <script src="/js/navigation-loader.js"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCTRQ-3PrBBM1ZUThSjUE6p6Zet1sjcapk"></script>
+  <script>
+    function createMarker(lat, lng, map, title, img) {
+      const marker = new google.maps.Marker({
+        position: {lat: lat, lng: lng},
+        map: map,
+        title: title
+      });
+      var info = '<h3>'+title+'</h3>'+'<img src="'+img+'">';
+      var infoWindow = new google.maps.InfoWindow({
+        content: info
+      });
+      marker.addListener('mouseover', function() {
+        infoWindow.open(map, marker);
+      });
+      marker.addListener('mouseout', function() {
+        infoWindow.close(map, marker);
+      });
+      marker.addListener('click', function() {
+        infoWindow.open(map, marker);
+      });
+    }
+    function createMap(){
+      const map = new google.maps.Map(document.getElementById('map'), {
+        center: {lat: 40.4428, lng: -79.943},
+        zoom: 14
+      });
+      createMarker(40.4428, -79.943, map, 'Walking to the Sky', 'https://images.app.goo.gl/YhEMZxAgDdxrDZWe7');
+    }
+    function start() {
+      addLoginOrLogoutLinkToNavigation();
+      createMap();
+    }
+  </script>
+  <style>
+    #map {
+      width: 500px;
+      height: 500px;
+      border: thin solid black;
+    }
+  </style>
+</head>
+<body onload="start();">
+  <nav>
+    <ul id="navigation">
+      <li><a href="/">Home</a></li>
+      <li><a href="/aboutus.html">About Our Team</a></li>
+    </ul>
+  </nav>
+  <h1>CodeU Starter Project</h1>
+  <h3>Hello Google Maps - maps project part 1 (sample code) </h3>
+  <div id="map"></div>
+</body>
 </html>
