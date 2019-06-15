@@ -23,9 +23,12 @@ import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.SortDirection;
+import com.google.appengine.api.datastore.FetchOptions;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.Set;
+import java.util.HashSet;
 
 /** Provides access to the data stored in Datastore. */
 public class Datastore {
@@ -35,6 +38,16 @@ public class Datastore {
   public Datastore() {
     datastore = DatastoreServiceFactory.getDatastoreService();
   }
+
+  public Set<String> getUsers(){
+  Set<String> users = new HashSet<>();
+  Query query = new Query("Message");
+  PreparedQuery results = datastore.prepare(query);
+  for(Entity entity : results.asIterable()) {
+    users.add((String) entity.getProperty("user"));
+  }
+  return users;
+}
 
   /** Stores the Message in Datastore. */
   public void storeMessage(Message message) {
@@ -79,4 +92,43 @@ public class Datastore {
 
     return messages;
   }
+
+  /**
+   * Gets messages posted by all users
+   *
+   * @return a list of messages posted by all users. List is sorted by time
+   *     descending.
+   */
+  public List<Message> getAllMessages() {
+    List<Message> messages = new ArrayList<>();
+
+    Query query = new Query("Message").addSort("timestamp", SortDirection.DESCENDING);
+    PreparedQuery results = datastore.prepare(query);
+
+    for (Entity entity : results.asIterable()) {
+      try {
+        String user = (String) entity.getProperty("user");
+        List<Message> userMessages = getMessages(user);
+        for (Message message : userMessages) {
+            messages.add(message);
+        }
+      } catch (Exception e) {
+        System.err.println("Error reading user messages.");
+        System.err.println(entity.toString());
+        e.printStackTrace();
+      }
+    }
+
+    return messages;
+  }
+
+  /* Returns the total number of messages for all users. */
+
+  public int getTotalMessageCount(){
+    Query query = new Query("Message");
+    PreparedQuery results = datastore.prepare(query);
+    return results.countEntities(FetchOptions.Builder.withLimit(1000));
+
+  }
+
 }
