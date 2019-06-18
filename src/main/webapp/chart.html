@@ -4,29 +4,37 @@
         <title>Best Cheap Eats</title> <!--- Temporary browser title --->
         <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
         <script type="text/javascript">
-            google.charts.load('current', {packages: ['corechart']});
-            google.charts.setOnLoadCallback(drawChart);
-            function drawChart(){
-                var restaurant_data = new google.visualization.DataTable(); //define new DataTable instance
+        google.charts.load('current', {packages: ['corechart']});
+        google.charts.setOnLoadCallback(drawChart);
 
-                //define columns for DataTable instance
-                restaurant_data.addColumn('string', 'Restaurant Name');
-                restaurant_data.addColumn('number', 'Votes');
+        function drawChart(){
+            fetch("/eatschart")
+            .then((response) => {
+                return response.json();
+            })
+            .then((restaurantJson) => {
+                var restaurantData = new google.visualization.DataTable();
+                //define columns for the DataTable instance
+                restaurantData.addColumn('string', 'Restaurant Name');
+                restaurantData.addColumn('number', 'Rating');
 
-                //add data to restaurant_data
-                restaurant_data.addRows([
-                    //names are temporary placeholders, need to do research and add actual restaurant names
-                    ["Restaurant 1", 3],
-                    ["Restaurant 2", 3],
-                    ["Restaurant 3", 3],
-                    ["Restaurant 4", 3],
-                ]);
+                for (i = 0; i < restaurantJson.length; i++) {
+                  restaurantRow = [];
+                  var name = restaurantJson[i].name;
+                  var ratings = restaurantJson[i].rating;
+                  restaurantRow.push(name, ratings);
 
-                var chart = new google.visualization.BarChart(document.getElementById('restaurant_chart'));
-
-                chart.draw(restaurant_data);
-            }
-</script>
+                  restaurantData.addRow(restaurantRow);
+               }
+               var chartOptions = {
+                                 width: 800,
+                                 height: 400
+                   };
+               var restaurantChart = new google.visualization.BarChart(document.getElementById('restaurant_chart'));
+               restaurantChart.draw(restaurantData, chartOptions);
+            });
+        }
+        </script>
     </head>
     <body>
         <h1>Best Restaurants for Cheap Eats</h1> <!--- Temporary page title --->
