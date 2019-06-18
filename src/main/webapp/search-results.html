@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Restaurants Results</title>
+  <link rel="stylesheet" href="/css/main.css">
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCTRQ-3PrBBM1ZUThSjUE6p6Zet1sjcapk"></script>
+  <script>  
+    function createRestaurantsMap(){
+      fetch('/restaurant-data').then(function(response) {
+        return response.json();
+      }).then((restaurants) => {
+        const map = new google.maps.Map(document.getElementById('map'), {
+          center: {lat: 40.4428, lng: -79.943},
+          zoom: 11
+        });
+        restaurants.forEach((restaurant) => {
+          new google.maps.Marker({
+            position: {lat: restaurant.lat, lng: restaurant.lng},
+            map: map
+          });
+        });
+      });
+    }
+      
+  </script>
+  <style>
+    #map{
+      width: 500px;
+      height: 500px;
+      border: thin solid black;
+    }
+  </style>
+</head>
+<body onload="createRestaurantsMap();">
+ <h1>Restaurants in your area</h1>
+ <div id="map"></div>
+</body>
+</html>
