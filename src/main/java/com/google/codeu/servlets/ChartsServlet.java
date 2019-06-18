@@ -16,38 +16,54 @@
 
 package com.google.codeu.servlets;
 
-import com.google.appengine.api.users.UserService;
-import com.google.appengine.api.users.UserServiceFactory;
-import com.google.codeu.data.Datastore;
-import com.google.codeu.data.Message;
-import com.google.gson.Gson;
-import org.jsoup.Jsoup;
-import org.jsoup.safety.Whitelist;
-
+import java.io.IOException;
+import java.util.List;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.List;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import java.util.Scanner;
+
 
 /** Handles restaurant names and displays their overall ratings to the user. */
 @WebServlet("/eatschart")
 public class ChartsServlet extends HttpServlet {
 
-  private Datastore datastore;
+  private JsonArray restaurantRatingArray;
+
+  private static class restaurantRating {
+    String name;
+    double rating;
+
+    private restaurantRating (String name, double rating) {
+      this.name = name;
+      this.rating = rating;
+    }
+  }
 
   @Override
   public void init() {
-    datastore = new Datastore();
+    restaurantRatingArray = new JsonArray();
+    Gson gson = new Gson();
+    Scanner scanner = new Scanner(getServletContext().getResourceAsStream("/WEB-INF/restaurant-ratings.csv"));
+    scanner.nextLine(); //skips first line (the csv header)
+    while(scanner.hasNextLine()) {
+      String line = scanner.nextLine();
+      String[] cells = line.split(",");
+
+      String curName = cells[1];
+      double curRating = Double.parseDouble(cells[2]);
+
+      restaurantRatingArray.add(gson.toJsonTree(new restaurantRating(curName, curRating)));
+    }
+    scanner.close();
   }
 
-  /**
-   Test
-   */
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     response.setContentType("application/json");
-    response.getWriter().println("slowly but surely");
+    response.getOutputStream().println(restaurantRatingArray.toString());
   }
 }
