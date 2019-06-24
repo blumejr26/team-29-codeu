@@ -18,7 +18,7 @@ function createRestaurantMarker(map, lat, lng, name, address, zipcode) {
 }
 
 function fetchRestaurants(map) {
-  fetch('/restaurant-data').then(function(response) {
+  fetch('/restaurant-data?latitude='+parameterLatitude+'&longitude='+parameterLongitude).then(function(response) {
     return response.json();
   }).then((restaurants) => {
     const resultsContainer = document.getElementById('results-container');
