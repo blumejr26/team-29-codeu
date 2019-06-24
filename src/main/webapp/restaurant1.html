@@ -18,8 +18,8 @@ limitations under the License.
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>CodeU 2019 Starter Project</title>
-    <link rel="stylesheet" href="/css/home.css">
+    <title>Restaurant 1</title> <!-- Temporary title name, need real restaurants -->
+    <link rel="stylesheet" href="/css/restaurant-page.css">
     <style>
       .mySlides {display:none}
       .w3-left, .w3-right, .w3-badge {cursor:pointer}
@@ -27,14 +27,21 @@ limitations under the License.
     </style>
     <script src="/js/navigation-loader.js"></script>
   </head>
-  <body onload="addLoginOrLogoutLinkToNavigation();">
+  <body>
     <nav>
       <ul id="navigation">
         <li><a href="/">Home</a></li>
         <li><a href="/aboutus.html">About Our Team</a></li>
       </ul>
     </nav>
-    <h1>CodeU Starter Project</h1>
+    <h1>Restaurant 1</h1>
+    <p> 
+    	<b> "We believe the choices we make about what we eat, where it comes from and how it’s prepared have a direct and powerful impact on the health of individuals, communities and the environment." - Restaurant 1
+    	</b>
+    </p>
+    <p> temporary pics for slide show of 3 signature orders </p>
+
+    <!-- slide show  of signature orders -->
     <div class="w3-content w3-display-container" style="max-width:800px">
       <img class="mySlides" src="food-fries-sandwich-262892.jpg" style = "width: 100%">
       <img class="mySlides" src="dinner-egg-flatlay-54455.jpg" style = "width: 100%">
@@ -47,6 +54,25 @@ limitations under the License.
         <span class="w3-badge demo w3-border w3-transparent w3-hover-white" onclick="currentDiv(3)"></span>
       </div>
     </div>
+
+    <h3> Info </h3>
+
+    <!-- Temporary desciption --> 
+    <p> Restaurant 1 is perfect for a midweek grab and go lunch. A healthy option to power you through the rest of the day that wont break the bank! Known for "create your own" sandwhiches, paninis and salads you will find an array of mix and match options to fit your personal taste </p>
+
+    <!-- Temp Address --> 
+    <img src = "icons8-marker-50.png"> </img>
+    <p> 1600 K street Washington DC 20059 </p>
+    
+    <!-- Temp Phone Number -->
+    <img src = "icons8-phone-50.png"> </img>
+    <p> 202-543-9876 </p>
+
+    <!-- Temp Hours --> 
+    <img src = "icons8-time-50.png"> </img>
+    <p> Mon - Fri: 10am - 9pm Sat & Sun: 10am - 6pm </p>
+
+    <!--script for slide show --> 
     <script>
       var slideIndex = 1;
       showDivs(slideIndex);
@@ -77,5 +103,5 @@ limitations under the License.
             dots[slideIndex-1].className += " w3-white";
           }
         </script>
-      </body>
-      </html> 
+  </body>
+</html>
