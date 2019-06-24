@@ -1,3 +1,7 @@
+const urlParams = new URLSearchParams(window.location.search);
+const parameterLatitude = urlParams.get('latitude');
+const parameterLongitude = urlParams.get('longitude');
+
 function createRestaurantMarker(map, lat, lng, name, address, zipcode) {
   const marker = new google.maps.Marker({
     position: {lat: lat, lng: lng},

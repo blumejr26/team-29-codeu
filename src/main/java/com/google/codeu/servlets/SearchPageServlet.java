@@ -25,7 +25,7 @@ import org.jsoup.safety.Whitelist;
 public class SearchPageServlet extends HttpServlet {
   
   @Override
-  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
     UserService userService = UserServiceFactory.getUserService();
     if (!userService.isUserLoggedIn()) {
@@ -34,13 +34,14 @@ public class SearchPageServlet extends HttpServlet {
     }
 
     String user = userService.getCurrentUser().getEmail();
-    String location = Jsoup.clean(request.getParameter("text"), Whitelist.none());
+    String latitude = Jsoup.clean(request.getParameter("latitude"), Whitelist.none());
+    String longitude = Jsoup.clean(request.getParameter("longitude"), Whitelist.none());
 
-    response.sendRedirect("/search-results.html");
+    response.sendRedirect("/search-results.html?latitude="+latitude+"&longitude="+longitude);
   }
 
   @Override
-  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    doPost(request, response);
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    doGet(request, response);
   }
 }
