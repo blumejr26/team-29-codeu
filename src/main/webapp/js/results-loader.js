@@ -1,3 +1,7 @@
+const urlParams = new URLSearchParams(window.location.search);
+const parameterLatitude = urlParams.get('latitude');
+const parameterLongitude = urlParams.get('longitude');
+
 function createRestaurantMarker(map, lat, lng, name, address, zipcode) {
   const marker = new google.maps.Marker({
     position: {lat: lat, lng: lng},
@@ -14,7 +18,7 @@ function createRestaurantMarker(map, lat, lng, name, address, zipcode) {
 }
 
 function fetchRestaurants(map) {
-  fetch('/restaurant-data').then(function(response) {
+  fetch('/restaurant-data?latitude='+parameterLatitude+'&longitude='+parameterLongitude).then(function(response) {
     return response.json();
   }).then((restaurants) => {
     const resultsContainer = document.getElementById('results-container');
@@ -61,7 +65,7 @@ function buildRestaurantDiv(restaurant) {
 function loadResults() {
   // Create a map
   const map = new google.maps.Map(document.getElementById('map'), {
-    center: {lat: 40.4428, lng: -79.943},
+    center: {lat: parameterLatitude, lng: parameterLongitude},
     zoom: 11
   });
 

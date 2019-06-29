@@ -22,6 +22,7 @@ limitations under the License.
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/css/user-page.css">
     <script src="/js/user-page-loader.js"></script>
+    <script src="/js/navigation-loader.js"></script>
     <script src="https://www.gstatic.com/charts/loader.js"></script>
     <script src="/js/chart-loader.js"></script>
   </head>
@@ -36,16 +37,15 @@ limitations under the License.
     </nav>
     <h1 id="page-title">User Page</h1>
 
-    <form id="message-form" action="/messages" method="POST" class="hidden">
-      Enter a new message:
+    <form id="search-form" action="/search" method="GET">
+      Enter a location:
       <br/>
-      <textarea name="text" id="message-input"></textarea>
+      <textarea name="latitude" id="search-input" placeholder="latitude"></textarea>
+      <textarea name="longitude" id="search-input" placeholder="longitude"></textarea>
       <br/>
-      <input type="submit" value="Submit">
+      <input type="submit" value="Search">
     </form>
     <hr/>
-
-    <div id="message-container">Loading...</div>
 
     <h2>Top Rated Restaurants</h2>
     <div id="restaurant_chart"></div>
