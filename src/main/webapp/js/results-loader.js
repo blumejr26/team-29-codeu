@@ -68,6 +68,10 @@ function loadResults() {
     center: {lat: parseFloat(parameterLatitude), lng: parseFloat(parameterLongitude)},
     zoom: 11
   });
+  const marker = new google.maps.Marker({
+    position: {lat: parseFloat(parameterLatitude), lng: parseFloat(parameterLongitude)},
+    map: map
+  });
 
   // Display all results - on map and as a list
   fetchRestaurants(map);
