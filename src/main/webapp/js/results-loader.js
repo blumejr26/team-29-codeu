@@ -65,7 +65,7 @@ function buildRestaurantDiv(restaurant) {
 function loadResults() {
   // Create a map
   const map = new google.maps.Map(document.getElementById('map'), {
-    center: {lat: parameterLatitude, lng: parameterLongitude},
+    center: {lat: parseFloat(parameterLatitude), lng: parseFloat(parameterLongitude)},
     zoom: 11
   });
 

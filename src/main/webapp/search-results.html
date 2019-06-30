@@ -8,6 +8,14 @@
   <script src="/js/results-loader.js"></script>
 </head>
 <body onload="loadResults();">
+ <form id="search-form" action="/search" method="GET">
+  Enter a location:
+   <br/>
+   <textarea name="latitude" id="search-input" placeholder="latitude"></textarea>
+   <textarea name="longitude" id="search-input" placeholder="longitude"></textarea>
+   <br/>
+   <input type="submit" value="Search">
+ </form> 
  <h1>Restaurants in your area</h1>
  <div id="map"></div>
  <div id="results-container">Loading...</div>

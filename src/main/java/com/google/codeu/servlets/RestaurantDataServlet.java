@@ -27,7 +27,7 @@ public class RestaurantDataServlet extends HttpServlet {
     restaurantArray = new JsonArray();
     Gson gson = new Gson();
     Scanner scanner = new Scanner(getServletContext().getResourceAsStream("/WEB-INF/restaurants.csv"));
-    scanner.nextLine(); // to skip the first line of column headers; alternatively, can get rid of column headers
+    scanner.nextLine(); // to skip the first line of column headers; alternatively, can get rid of column headers in csv
     while(scanner.hasNextLine()) {
       String line = scanner.nextLine();
       String[] cells = line.split(",");
@@ -62,7 +62,6 @@ public class RestaurantDataServlet extends HttpServlet {
       double latitude = restaurantObject.get("lat").getAsDouble();
       double longitude = restaurantObject.get("lng").getAsDouble();
       if (distance(parameterLatitude, parameterLongitude, latitude, longitude) <= defaultRadius) {
-        //System.out.println("in range");
         filteredArray.add(restaurant);
       }
     }
