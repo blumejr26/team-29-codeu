@@ -69,10 +69,12 @@ function clearResults(map) {
   }
 }
 
-function buildRestaurantDiv(restaurant) {
-  const nameDiv = document.createElement('div');
-  nameDiv.classList.add('restaurant-name');
-  nameDiv.appendChild(document.createTextNode(restaurant.name));
+function buildRestaurantDiv(restaurant) {  
+  const nameLink = document.createElement('a');
+  nameLink.classList.add('restaurant-name');
+  nameLink.appendChild(document.createTextNode(restaurant.name));
+//  nameLink.href = '/restaurant-page.html?name=' + restaurant.name; // for the generic link
+  nameLink.href = '/restaurant1.html';  // using the static single restaurant page link for now
 
   const addressDiv = document.createElement('div');
   addressDiv.classList.add('restaurant-address');
@@ -84,7 +86,7 @@ function buildRestaurantDiv(restaurant) {
     
   const restaurantDiv = document.createElement('div');
   restaurantDiv.classList.add('restaurant-div');
-  restaurantDiv.appendChild(nameDiv);
+  restaurantDiv.appendChild(nameLink);
   restaurantDiv.appendChild(addressDiv);
   restaurantDiv.appendChild(categoryDiv);
 
