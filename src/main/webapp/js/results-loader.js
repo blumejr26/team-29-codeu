@@ -1,17 +1,31 @@
 const urlParams = new URLSearchParams(window.location.search);
-const address = "5000 Forbes Ave, Pittsburgh";
-let parameterLatitude;
-let parameterLongitude;
-var geocoder = geocoder = new google.maps.Geocoder();
-geocoder.geocode({'address': address}, function(results, status) {
-  if (status == 'OK') {
+const address = "Starbucks";
+let parameterLatitude = -1;
+let parameterLongitude = -1;
+var request = {
+  query: address,
+  fields: ['name', 'geometry'],
+  locationBias: {lat: 40.4, lng: -79.9}
+};
+var service = new google.maps.places.PlacesService(document.createElement('div'));
+service.findPlaceFromQuery(request, function(results, status) {
+  if (status === google.maps.places.PlacesServiceStatus.OK) {
     parameterLatitude = (results[0].geometry.location.lat()).toString();
     parameterLongitude = (results[0].geometry.location.lng()).toString();
-//    console.log(results);
-  } else {
-    alert('Geocode was not successful for the following reason: ' + status);
+    console.log(results);
   }
 });
+
+//var geocoder = geocoder = new google.maps.Geocoder();
+//geocoder.geocode({'address': address}, function(results, status) {
+//  if (status == 'OK') {
+//    parameterLatitude = (results[0].geometry.location.lat()).toString();
+//    parameterLongitude = (results[0].geometry.location.lng()).toString();
+//    console.log(results);
+//  } else {
+//    alert('Geocode was not successful for the following reason: ' + status);
+//  }
+//});
 //const parameterLatitude = urlParams.get('latitude');
 //const parameterLongitude = urlParams.get('longitude');
 //console.log(parameterLatitude);
