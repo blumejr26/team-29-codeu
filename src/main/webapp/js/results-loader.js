@@ -94,7 +94,7 @@ function buildRestaurantDiv(restaurant) {
   
   const categoryDiv = document.createElement('div');
   categoryDiv.classList.add('restaurant-category');
-  categoryDiv.innerHTML = restaurant.category;
+  categoryDiv.innerHTML = restaurant.category+'\t'+Math.round(restaurant.distance).toString(10)+" miles";
     
   const restaurantDiv = document.createElement('div');
   restaurantDiv.classList.add('restaurant-div');

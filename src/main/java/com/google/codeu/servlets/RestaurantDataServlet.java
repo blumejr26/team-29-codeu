@@ -50,9 +50,16 @@ public class RestaurantDataServlet extends HttpServlet {
     
     double parameterLatitude = Double.parseDouble(request.getParameter("latitude"));
     double parameterLongitude = Double.parseDouble(request.getParameter("longitude"));
-    JsonArray filteredRestaurantArray = filter(parameterLatitude, parameterLongitude);
+//    JsonArray filteredRestaurantArray = filter(parameterLatitude, parameterLongitude);
       
-    response.getOutputStream().println(filteredRestaurantArray.toString());
+    for (JsonElement restaurant : restaurantArray) {
+      JsonObject restaurantObject = restaurant.getAsJsonObject();
+      double latitude = restaurantObject.get("lat").getAsDouble();
+      double longitude = restaurantObject.get("lng").getAsDouble();
+      restaurantObject.addProperty("distance", distance(parameterLatitude, parameterLongitude, latitude, longitude));
+    }
+    response.getOutputStream().println(restaurantArray.toString());
+//    response.getOutputStream().println(filteredRestaurantArray.toString());
   }
     
   private JsonArray filter(double parameterLatitude, double parameterLongitude) {
