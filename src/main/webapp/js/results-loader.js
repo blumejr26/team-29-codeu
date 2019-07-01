@@ -1,6 +1,21 @@
 const urlParams = new URLSearchParams(window.location.search);
-const parameterLatitude = urlParams.get('latitude');
-const parameterLongitude = urlParams.get('longitude');
+const address = "5000 Forbes Ave, Pittsburgh";
+let parameterLatitude;
+let parameterLongitude;
+var geocoder = geocoder = new google.maps.Geocoder();
+geocoder.geocode({'address': address}, function(results, status) {
+  if (status == 'OK') {
+    parameterLatitude = (results[0].geometry.location.lat()).toString();
+    parameterLongitude = (results[0].geometry.location.lng()).toString();
+//    console.log(results);
+  } else {
+    alert('Geocode was not successful for the following reason: ' + status);
+  }
+});
+//const parameterLatitude = urlParams.get('latitude');
+//const parameterLongitude = urlParams.get('longitude');
+//console.log(parameterLatitude);
+//console.log(parameterLongitude);
 
 function createRestaurantMarker(map, lat, lng, name, address, zipcode) {
   const marker = new google.maps.Marker({
@@ -22,7 +37,6 @@ function fetchRestaurants(map) {
     return response.json();
   }).then((restaurants) => {
     const resultsContainer = document.getElementById('results-container');
-    if (restaurants.length == 0)
     if (restaurants.length == 0) {
       resultsContainer.innerHTML = '<p>There are no restaurants matching this criteria.</p>';
     } else {
