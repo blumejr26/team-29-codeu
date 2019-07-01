@@ -1,18 +1,27 @@
 const urlParams = new URLSearchParams(window.location.search);
 const address = "Starbucks";
-let parameterLatitude = -1;
-let parameterLongitude = -1;
+let parameterLatitude;
+let parameterLongitude;
+var userLatitude = 40.4;
+var userLongitude = -79.9;
+if (navigator.geolocation) {
+  navigator.geolocation.getCurrentPosition(function(position) {
+    userLatitude = position.coords.latitude;
+    userLongitude = position.coords.longitude;
+  }, function() {
+  });
+}
+
 var request = {
   query: address,
   fields: ['name', 'geometry'],
-  locationBias: {lat: 40.4, lng: -79.9}
+  locationBias: {lat: userLatitude, lng: userLongitude}
 };
 var service = new google.maps.places.PlacesService(document.createElement('div'));
 service.findPlaceFromQuery(request, function(results, status) {
   if (status === google.maps.places.PlacesServiceStatus.OK) {
     parameterLatitude = (results[0].geometry.location.lat()).toString();
     parameterLongitude = (results[0].geometry.location.lng()).toString();
-    console.log(results);
   }
 });
 
@@ -96,8 +105,12 @@ function loadResults() {
     center: {lat: parseFloat(parameterLatitude), lng: parseFloat(parameterLongitude)},
     zoom: 11
   });
-  const marker = new google.maps.Marker({
+  var searchMarker = new google.maps.Marker({
     position: {lat: parseFloat(parameterLatitude), lng: parseFloat(parameterLongitude)},
+    map: map
+  });
+  const userMarker = new google.maps.Marker({
+    position: {lat: userLatitude, lng: userLongitude},
     map: map
   });
 
