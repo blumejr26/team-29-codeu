@@ -6,20 +6,7 @@ var userLatitude = 40.4;
 var userLongitude = -79.9;
 let restaurantsList;
 
-//var geocoder = geocoder = new google.maps.Geocoder();
-//geocoder.geocode({'address': address}, function(results, status) {
-//  if (status == 'OK') {
-//    parameterLatitude = (results[0].geometry.location.lat()).toString();
-//    parameterLongitude = (results[0].geometry.location.lng()).toString();
-//    console.log(results);
-//  } else {
-//    alert('Geocode was not successful for the following reason: ' + status);
-//  }
-//});
-//const parameterLatitude = urlParams.get('latitude');
-//const parameterLongitude = urlParams.get('longitude');
-//console.log(parameterLatitude);
-//console.log(parameterLongitude);
+
 
 function createRestaurantMarker(map, lat, lng, name, address, zipcode) {
   const marker = new google.maps.Marker({
@@ -36,7 +23,7 @@ function createRestaurantMarker(map, lat, lng, name, address, zipcode) {
   });
 }
 
-function filterAndDisplayResults(map) {
+function filterAndDisplayResults(map, key) {
   const resultsContainer = document.getElementById('results-container');
   if (restaurantsList.length == 0) {
     resultsContainer.innerHTML = '<p>There are no restaurants matching this criteria.</p>';
@@ -44,7 +31,7 @@ function filterAndDisplayResults(map) {
     resultsContainer.innerHTML = '';
   }
     
-  (restaurantsList.sort(sortByKey('distance'))).forEach((restaurant) => {
+  (restaurantsList.sort(sortByKey(key))).forEach((restaurant) => {
     if (restaurant.distance < 2) {
       // Create a marker for each restaurant on the map
       createRestaurantMarker(map, restaurant.lat, restaurant.lng, restaurant.name, restaurant.address, restaurant.zipcode);
@@ -134,7 +121,12 @@ function initialize() {
     return response.json();
   }).then((restaurants) => {
     restaurantsList = restaurants;
-    filterAndDisplayResults(map);
+    filterAndDisplayResults(map, 'distance');
+  });
+
+  var selectSortKey = document.getElementById('selectSortKey');
+  selectSortKey.addEventListener('change', function() {
+    filterAndDisplayResults(map, document.getElementById('selectSortKey').value);
   });
 
 }
