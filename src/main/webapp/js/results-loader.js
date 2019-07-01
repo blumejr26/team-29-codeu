@@ -73,12 +73,13 @@ function fetchRestaurants(map) {
     }
     
     restaurants.forEach((restaurant) => {
-      // Create a marker for each restaurant on the map
-      createRestaurantMarker(map, restaurant.lat, restaurant.lng, restaurant.name, restaurant.address, restaurant.zipcode);
-      
-      //List each restaurant
-      const restaurantDiv = buildRestaurantDiv(restaurant);
-      resultsContainer.appendChild(restaurantDiv);
+      if (restaurant.distance < 2) {
+        // Create a marker for each restaurant on the map
+        createRestaurantMarker(map, restaurant.lat, restaurant.lng, restaurant.name, restaurant.address, restaurant.zipcode);
+        //List each restaurant
+        const restaurantDiv = buildRestaurantDiv(restaurant);
+        resultsContainer.appendChild(restaurantDiv);
+      }
     });
   });
 }
