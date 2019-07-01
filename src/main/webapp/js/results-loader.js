@@ -23,7 +23,7 @@ function createRestaurantMarker(map, lat, lng, name, address, zipcode) {
   });
 }
 
-function filterAndDisplayResults(map, key) {
+function filterAndDisplayResults(map) {
   const resultsContainer = document.getElementById('results-container');
   if (restaurantsList.length == 0) {
     resultsContainer.innerHTML = '<p>There are no restaurants matching this criteria.</p>';
@@ -31,8 +31,10 @@ function filterAndDisplayResults(map, key) {
     resultsContainer.innerHTML = '';
   }
     
-  (restaurantsList.sort(sortByKey(key))).forEach((restaurant) => {
-    if (restaurant.distance < 2) {
+  var key = document.getElementById('selectSortKey').value;
+  var radius = document.getElementById('searchRadius').value;
+  (restaurantsList.sort(sortBy(key))).forEach((restaurant) => {
+    if (restaurant.distance < radius) {
       // Create a marker for each restaurant on the map
       createRestaurantMarker(map, restaurant.lat, restaurant.lng, restaurant.name, restaurant.address, restaurant.zipcode);
       //List each restaurant
@@ -42,7 +44,7 @@ function filterAndDisplayResults(map, key) {
   });
 }
 
-function sortByKey(key) {
+function sortBy(key) {
   return function(a, b) {
     if (a[key] > b[key]) {
       return 1;
@@ -126,7 +128,12 @@ function initialize() {
 
   var selectSortKey = document.getElementById('selectSortKey');
   selectSortKey.addEventListener('change', function() {
-    filterAndDisplayResults(map, document.getElementById('selectSortKey').value);
+    filterAndDisplayResults(map);
+  });
+  
+  var searchRadius = document.getElementById('searchRadius');
+  searchRadius.addEventListener('input', function() {
+    filterAndDisplayResults(map);
   });
 
 }
