@@ -44,7 +44,7 @@ function filterAndDisplayResults(map) {
     resultsContainer.innerHTML = '';
   }
     
-  restaurantsList.forEach((restaurant) => {
+  (restaurantsList.sort(sortByKey('distance'))).forEach((restaurant) => {
     if (restaurant.distance < 2) {
       // Create a marker for each restaurant on the map
       createRestaurantMarker(map, restaurant.lat, restaurant.lng, restaurant.name, restaurant.address, restaurant.zipcode);
@@ -53,6 +53,17 @@ function filterAndDisplayResults(map) {
       resultsContainer.appendChild(restaurantDiv);
     }
   });
+}
+
+function sortByKey(key) {
+  return function(a, b) {
+    if (a[key] > b[key]) {
+      return 1;
+    } else if (a[key] < b[key]) {
+      return -1;
+    }
+    return 0;
+  }
 }
 
 function buildRestaurantDiv(restaurant) {
