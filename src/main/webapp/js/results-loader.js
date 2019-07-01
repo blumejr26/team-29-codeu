@@ -4,6 +4,7 @@ let parameterLatitude;
 let parameterLongitude;
 var userLatitude = 40.4;
 var userLongitude = -79.9;
+var markers = [];
 let restaurantsList;
 
 
@@ -21,9 +22,11 @@ function createRestaurantMarker(map, lat, lng, name, address, zipcode) {
   marker.addListener('click', function() {
     infoWindow.open(map, marker);
   });
+  markers.push(marker);
 }
 
 function filterAndDisplayResults(map) {
+  clearResults(map);
   const resultsContainer = document.getElementById('results-container');
   if (restaurantsList.length == 0) {
     resultsContainer.innerHTML = '<p>There are no restaurants matching this criteria.</p>';
@@ -52,6 +55,17 @@ function sortBy(key) {
       return -1;
     }
     return 0;
+  }
+}
+
+function clearResults(map) {
+  for (var i = 2; i < markers.length; i++) {
+    markers[i].setMap(null);
+  }
+  markers = [markers[0], markers[1]];
+  var results = document.getElementById('results-container');
+  while(results.lastChild){
+    results.removeChild(results.firstChild);
   }
 }
 
@@ -118,6 +132,8 @@ function initialize() {
     position: {lat: userLatitude, lng: userLongitude},
     map: map
   });
+  markers.push(searchMarker);
+  markers.push(userMarker);
     
   fetch('/restaurant-data?latitude='+parameterLatitude+'&longitude='+parameterLongitude).then(function(response) {
     return response.json();
