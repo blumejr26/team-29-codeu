@@ -1,5 +1,5 @@
 const urlParams = new URLSearchParams(window.location.search);
-const address = "Starbucks";
+const address = urlParams.get('location').trim();
 let parameterLatitude;
 let parameterLongitude;
 var userLatitude = 40.4;
@@ -12,18 +12,24 @@ if (navigator.geolocation) {
   });
 }
 
-var request = {
-  query: address,
-  fields: ['name', 'geometry'],
-  locationBias: {lat: userLatitude, lng: userLongitude}
-};
-var service = new google.maps.places.PlacesService(document.createElement('div'));
-service.findPlaceFromQuery(request, function(results, status) {
-  if (status === google.maps.places.PlacesServiceStatus.OK) {
-    parameterLatitude = (results[0].geometry.location.lat()).toString();
-    parameterLongitude = (results[0].geometry.location.lng()).toString();
-  }
-});
+if (address === '') {
+  parameterLatitude = userLatitude.toString();
+  parameterLongitude = userLongitude.toString();
+}
+else {
+  var request = {
+    query: address,
+    fields: ['name', 'geometry'],
+    locationBias: {lat: userLatitude, lng: userLongitude}
+  };
+  var service = new google.maps.places.PlacesService(document.createElement('div'));
+  service.findPlaceFromQuery(request, function(results, status) {
+    if (status === google.maps.places.PlacesServiceStatus.OK) {
+      parameterLatitude = (results[0].geometry.location.lat()).toString();
+      parameterLongitude = (results[0].geometry.location.lng()).toString();
+    }
+  });
+}
 
 //var geocoder = geocoder = new google.maps.Geocoder();
 //geocoder.geocode({'address': address}, function(results, status) {

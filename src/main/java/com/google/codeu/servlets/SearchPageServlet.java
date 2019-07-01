@@ -34,10 +34,12 @@ public class SearchPageServlet extends HttpServlet {
     }
 
     String user = userService.getCurrentUser().getEmail();
-    String latitude = Jsoup.clean(request.getParameter("latitude"), Whitelist.none());
-    String longitude = Jsoup.clean(request.getParameter("longitude"), Whitelist.none());
-
-    response.sendRedirect("/search-results.html?latitude="+latitude+"&longitude="+longitude);
+//    String latitude = Jsoup.clean(request.getParameter("latitude"), Whitelist.none());
+//    String longitude = Jsoup.clean(request.getParameter("longitude"), Whitelist.none());
+    String location = Jsoup.clean(request.getParameter("location"), Whitelist.none());
+      
+//    response.sendRedirect("/search-results.html?latitude="+latitude+"&longitude="+longitude);
+    response.sendRedirect("/search-results.html?location="+location);
   }
 
   @Override
