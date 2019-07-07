@@ -49,6 +49,20 @@ public class Datastore {
   return users;
 }
 
+
+  /** Stores the Message in Datastore. */
+  public void storeRestaurant(Restaurant restaurant) {
+    Entity restaurantEntity = new Entity("Restaurant", restaurant.getId().toString());
+    restaurantEntity.setProperty("name", restaurant.getName());
+    restaurantEntity.setProperty("address", restaurant.getAddress());
+    restaurantEntity.setProperty("zipcode", restaurant.getZipcode());
+    restaurantEntity.setProperty("latitude", restaurant.getLatitude());
+    restaurantEntity.setProperty("longitude", restaurant.getLongitude());
+    restaurantEntity.setProperty("category", restaurant.getCategory());
+
+    datastore.put(restaurantEntity);
+  }
+
   /** Stores the Message in Datastore. */
   public void storeMessage(Message message) {
     Entity messageEntity = new Entity("Message", message.getId().toString());
