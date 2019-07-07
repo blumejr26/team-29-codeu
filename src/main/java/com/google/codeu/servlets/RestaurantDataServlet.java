@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonElement;
+import com.google.codeu.data.Restaurant;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -89,22 +90,22 @@ public class RestaurantDataServlet extends HttpServlet {
     }
   }
 
-  // This class could be its own file if we needed it outside this servlet
-  private static class Restaurant {
-    String name;
-    String address;
-    int zipcode;
-    double lat;
-    double lng;
-    String category;
-
-    private Restaurant(String name, String address, int zipcode, double lat, double lng, String category) {
-      this.name = name;
-      this.address = address;
-      this.zipcode = zipcode;
-      this.lat = lat;
-      this.lng = lng;
-      this.category = category;
-    }
-  }
+//  // This class could be its own file if we needed it outside this servlet
+//  private static class Restaurant {
+//    String name;
+//    String address;
+//    int zipcode;
+//    double lat;
+//    double lng;
+//    String category;
+//
+//    private Restaurant(String name, String address, int zipcode, double lat, double lng, String category) {
+//      this.name = name;
+//      this.address = address;
+//      this.zipcode = zipcode;
+//      this.lat = lat;
+//      this.lng = lng;
+//      this.category = category;
+//    }
+//  }
 }
