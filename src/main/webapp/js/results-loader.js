@@ -2,8 +2,6 @@ const urlParams = new URLSearchParams(window.location.search);
 const address = urlParams.get('location').trim();
 let parameterLatitude;
 let parameterLongitude;
-var userLatitude = 40.4;
-var userLongitude = -79.9;
 var markers = [];
 let restaurantsList;
 
@@ -59,7 +57,7 @@ function sortBy(key) {
 }
 
 function clearResults(map) {
-  for (var i = 2; i < markers.length; i++) {
+  for (var i = 1; i < markers.length; i++) {
     markers[i].setMap(null);
   }
   markers = [markers[0], markers[1]];
@@ -94,54 +92,43 @@ function buildRestaurantDiv(restaurant) {
 }
 
 function initialize() {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(function(position) {
-      userLatitude = position.coords.latitude;
-      userLongitude = position.coords.longitude;
-    }, function() {
-    });
-  }
+  var request = {
+    query: address,
+    fields: ['name', 'geometry'],
+    locationBias: {lat: 49.1, lng: -79.9}
+  };
+  var service = new google.maps.places.PlacesService(document.createElement('div'));
+  service.findPlaceFromQuery(request, function(results, status) {
+    console.log(results);
+    if (status === google.maps.places.PlacesServiceStatus.OK) {
+      parameterLatitude = (results[0].geometry.location.lat()).toString();
+      parameterLongitude = (results[0].geometry.location.lng()).toString();
+      
+      // Create a map
+      const map = new google.maps.Map(document.getElementById('map'), {
+        center: {lat: parseFloat(parameterLatitude), lng: parseFloat(parameterLongitude)},
+        zoom: 11
+      });
+      var searchMarker = new google.maps.Marker({
+        position: {lat: parseFloat(parameterLatitude), lng: parseFloat(parameterLongitude)},
+        map: map
+      });
+      markers.push(searchMarker);
 
-  if (address === '') {
-    parameterLatitude = userLatitude.toString();
-    parameterLongitude = userLongitude.toString();
-  }
-  else {
-    var request = {
-      query: address,
-      fields: ['name', 'geometry'],
-      locationBias: {lat: userLatitude, lng: userLongitude}
-    };
-    var service = new google.maps.places.PlacesService(document.createElement('div'));
-    service.findPlaceFromQuery(request, function(results, status) {
-      if (status === google.maps.places.PlacesServiceStatus.OK) {
-        parameterLatitude = (results[0].geometry.location.lat()).toString();
-        parameterLongitude = (results[0].geometry.location.lng()).toString();
-      }
-    });
-  }
+      fetch('/restaurant-data?latitude='+parameterLatitude+'&longitude='+parameterLongitude).then(function(response) {
+        return response.json();
+      }).then((restaurants) => {
+        restaurantsList = restaurants;
+        filterAndDisplayResults(map, 'distance');
+      });
 
-  // Create a map
-  const map = new google.maps.Map(document.getElementById('map'), {
-    center: {lat: parseFloat(parameterLatitude), lng: parseFloat(parameterLongitude)},
-    zoom: 11
-  });
-  var searchMarker = new google.maps.Marker({
-    position: {lat: parseFloat(parameterLatitude), lng: parseFloat(parameterLongitude)},
-    map: map
-  });
-  const userMarker = new google.maps.Marker({
-    position: {lat: userLatitude, lng: userLongitude},
-    map: map
-  });
-  markers.push(searchMarker);
-  markers.push(userMarker);
-    
-  fetch('/restaurant-data?latitude='+parameterLatitude+'&longitude='+parameterLongitude).then(function(response) {
-    return response.json();
-  }).then((restaurants) => {
-    restaurantsList = restaurants;
-    filterAndDisplayResults(map, 'distance');
+    } else {
+      const map = new google.maps.Map(document.getElementById('map'), {
+        center: {lat: 0, lng: 0},
+        zoom: 11
+      });
+      console.log("no results :(");
+    }
   });
 
   var selectSortKey = document.getElementById('selectSortKey');
