@@ -2,8 +2,9 @@ const urlParams = new URLSearchParams(window.location.search);
 const address = urlParams.get('location').trim();
 let parameterLatitude;
 let parameterLongitude;
-var markers = [];
+let markersDict = new Object();
 let restaurantsList;
+let map;
 
 
 
@@ -20,11 +21,11 @@ function createRestaurantMarker(map, lat, lng, name, address, zipcode) {
   marker.addListener('click', function() {
     infoWindow.open(map, marker);
   });
-  markers.push(marker);
+  markersDict[name] = marker;
 }
 
-function filterAndDisplayResults(map) {
-  clearResults(map);
+function filterAndDisplayResults() {
+  clearResults();
   const resultsContainer = document.getElementById('results-container');
   if (restaurantsList.length == 0) {
     resultsContainer.innerHTML = '<p>There are no restaurants matching this criteria.</p>';
@@ -37,10 +38,23 @@ function filterAndDisplayResults(map) {
   (restaurantsList.sort(sortBy(key))).forEach((restaurant) => {
     if (restaurant.distance < radius) {
       // Create a marker for each restaurant on the map
-      createRestaurantMarker(map, restaurant.lat, restaurant.lng, restaurant.name, restaurant.address, restaurant.zipcode);
+      if (markersDict.hasOwnProperty(restaurant.name)) {
+        markersDict[restaurant.name].setMap(map);
+      }
+      else {
+        createRestaurantMarker(map, restaurant.lat, restaurant.lng, restaurant.name, restaurant.address, restaurant.zipcode);
+      }
       //List each restaurant
       const restaurantDiv = buildRestaurantDiv(restaurant);
       resultsContainer.appendChild(restaurantDiv);
+    }
+    else {
+      if (markersDict.hasOwnProperty(restaurant.name)) {
+        markersDict[restaurant.name].setMap(null);
+      }
+      else {
+        createRestaurantMarker(null, restaurant.lat, restaurant.lng, restaurant.name, restaurant.address, restaurant.zipcode);
+      }
     }
   });
 }
@@ -56,11 +70,11 @@ function sortBy(key) {
   }
 }
 
-function clearResults(map) {
-  for (var i = 1; i < markers.length; i++) {
-    markers[i].setMap(null);
-  }
-  markers = [markers[0], markers[1]];
+function clearResults() {
+//  for (var i = 1; i < markersDict.length; i++) {
+//    markersDict[i].setMap(null);
+//  }
+//  markersDict = [markersDict[0], markersDict[1]];
   var results = document.getElementById('results-container');
   while(results.lastChild){
     results.removeChild(results.firstChild);
@@ -99,13 +113,13 @@ function initialize() {
   };
   var service = new google.maps.places.PlacesService(document.createElement('div'));
   service.findPlaceFromQuery(request, function(results, status) {
-    console.log(results);
+//    console.log(results);
     if (status === google.maps.places.PlacesServiceStatus.OK) {
       parameterLatitude = (results[0].geometry.location.lat()).toString();
       parameterLongitude = (results[0].geometry.location.lng()).toString();
       
       // Create a map
-      const map = new google.maps.Map(document.getElementById('map'), {
+      map = new google.maps.Map(document.getElementById('map'), {
         center: {lat: parseFloat(parameterLatitude), lng: parseFloat(parameterLongitude)},
         zoom: 11
       });
@@ -113,32 +127,32 @@ function initialize() {
         position: {lat: parseFloat(parameterLatitude), lng: parseFloat(parameterLongitude)},
         map: map
       });
-      markers.push(searchMarker);
+      markersDict["user-search"] = searchMarker;
 
       fetch('/restaurant-data?latitude='+parameterLatitude+'&longitude='+parameterLongitude).then(function(response) {
         return response.json();
       }).then((restaurants) => {
         restaurantsList = restaurants;
-        filterAndDisplayResults(map, 'distance');
+        filterAndDisplayResults();
       });
 
     } else {
-      const map = new google.maps.Map(document.getElementById('map'), {
+      map = new google.maps.Map(document.getElementById('map'), {
         center: {lat: 0, lng: 0},
         zoom: 11
       });
-      console.log("no results :(");
+      document.getElementById('results-container').innerHTML = "we don't recognize this location :(";
     }
   });
 
   var selectSortKey = document.getElementById('selectSortKey');
   selectSortKey.addEventListener('change', function() {
-    filterAndDisplayResults(map);
+    filterAndDisplayResults();
   });
   
   var searchRadius = document.getElementById('searchRadius');
   searchRadius.addEventListener('input', function() {
-    filterAndDisplayResults(map);
+    filterAndDisplayResults();
   });
 
 }
