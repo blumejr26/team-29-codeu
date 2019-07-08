@@ -131,4 +131,13 @@ public class Datastore {
 
   }
 
+
+ /* public void storeRestaurant(Restaurant name) {
+    Entity nameEntity = new Entity("Restaurant", name.getId().toString());
+    nameEntity.setProperty("user", name.getUser());
+    nameEntity.setProperty("name", name.getName());
+
+    datastore.put(nameEntity);
+  } */
+
 }
