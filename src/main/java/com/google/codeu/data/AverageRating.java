@@ -39,7 +39,7 @@ public class AverageRating {
     return restaurant;
   }
   
-  public long getAvgRating() {
+  public double getAvgRating() {
     return avgRating;
   }
 
