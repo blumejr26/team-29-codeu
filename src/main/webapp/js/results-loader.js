@@ -36,7 +36,8 @@ function filterAndDisplayResults() {
   var key = document.getElementById('selectSortKey').value;
   var radius = document.getElementById('searchRadius').value;
   (restaurantsList.sort(sortBy(key))).forEach((restaurant) => {
-    if (restaurant.distance < radius) {
+    var dist = distance(parseFloat(parameterLatitude), parseFloat(parameterLongitude), restaurant.lat, restaurant.lng);
+    if (dist < radius) {
       // Create a marker for each restaurant on the map
       if (markersDict.hasOwnProperty(restaurant.name)) {
         markersDict[restaurant.name].setMap(map);
@@ -45,7 +46,7 @@ function filterAndDisplayResults() {
         createRestaurantMarker(map, restaurant.lat, restaurant.lng, restaurant.name, restaurant.address, restaurant.zipcode);
       }
       //List each restaurant
-      const restaurantDiv = buildRestaurantDiv(restaurant);
+      const restaurantDiv = buildRestaurantDiv(restaurant, dist);
       resultsContainer.appendChild(restaurantDiv);
     }
     else {
@@ -57,6 +58,19 @@ function filterAndDisplayResults() {
       }
     }
   });
+}
+
+function distance(lat1, lng1, lat2, lng2) {
+  if ((lat1 == lat2) && (lng1 == lng2)) {
+    return 0;
+  } else {
+    theta = lng1 - lng2;
+    dist = Math.sin(lat1 * Math.PI / 180) * Math.sin(lat2 * Math.PI / 180) + Math.cos(lat1 * Math.PI / 180) *                           Math.cos(lat2 * Math.PI / 180) * Math.cos(theta * Math.PI / 180);
+    dist = Math.acos(dist);
+    dist = dist * (180 / Math.PI);
+    dist = dist * 60 * 1.1515;
+    return (dist);
+  }
 }
 
 function sortBy(key) {
@@ -81,7 +95,7 @@ function clearResults() {
   }
 }
 
-function buildRestaurantDiv(restaurant) {  
+function buildRestaurantDiv(restaurant, dist) {  
   const nameLink = document.createElement('a');
   nameLink.classList.add('restaurant-name');
   nameLink.appendChild(document.createTextNode(restaurant.name));
@@ -94,7 +108,7 @@ function buildRestaurantDiv(restaurant) {
   
   const categoryDiv = document.createElement('div');
   categoryDiv.classList.add('restaurant-category');
-  categoryDiv.innerHTML = restaurant.category+'\t'+Math.round(restaurant.distance).toString(10)+" miles";
+  categoryDiv.innerHTML = restaurant.category+'\t'+Math.round(dist).toString(10)+" miles";
     
   const restaurantDiv = document.createElement('div');
   restaurantDiv.classList.add('restaurant-div');
