@@ -15,33 +15,43 @@ limitations under the License.
 -->
 
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/html">
   <head>
     <title>User Page</title>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/css/user-page.css">
     <script src="/js/user-page-loader.js"></script>
+    <script src="/js/navigation-loader.js"></script>
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="/js/chart-loader.js"></script>
   </head>
-  <body onload="buildUI();">
+  <body onload="buildUI(); drawChart(); addLoginOrLogoutLinkToNavigation();">
     <nav>
       <ul id="navigation">
         <li><a href="/">Home</a></li>
+        <li><a href="/search-results.html">Search</a></li>
         <li><a href="/aboutus.html">About Our Team</a></li>
+        <li><a href="/logout">Logout</a></li>
       </ul>
     </nav>
     <h1 id="page-title">User Page</h1>
 
-    <form id="message-form" action="/messages" method="POST" class="hidden">
-      Enter a new message:
+    <form id="search-form" action="/search" method="GET">
+      Enter a location:
       <br/>
-      <textarea name="text" id="message-input"></textarea>
+<!--
+      <textarea name="latitude" id="search-input" placeholder="latitude"></textarea>
+      <textarea name="longitude" id="search-input" placeholder="longitude"></textarea>
+-->
+      <textarea name="location" id="search-input" placeholder="Current Location"></textarea>
       <br/>
-      <input type="submit" value="Submit">
+      <input type="submit" value="Search">
     </form>
     <hr/>
 
-    <div id="message-container">Loading...</div>
+    <h2>Top Rated Restaurants</h2>
+    <div id="restaurant_chart"></div>
 
   </body>
 </html>

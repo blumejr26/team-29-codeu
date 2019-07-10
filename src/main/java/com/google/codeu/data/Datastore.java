@@ -24,30 +24,81 @@ import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.datastore.FetchOptions;
+//import com.google.appengine.api.datastore.EntityNotFoundException;
+import java.io.File;
+import java.io.InputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.Set;
 import java.util.HashSet;
+import java.util.Scanner;
 
 /** Provides access to the data stored in Datastore. */
 public class Datastore {
 
   private DatastoreService datastore;
+  static boolean loadCSV = true;
 
   public Datastore() {
     datastore = DatastoreServiceFactory.getDatastoreService();
+    if (loadCSV) {
+      Query query = new Query("Restaurant");
+      PreparedQuery results = datastore.prepare(query);
+      if (results.countEntities(FetchOptions.Builder.withLimit(1)) == 0) {
+        try {
+          InputStream inputStream = new FileInputStream(new File("WEB-INF/restaurants.csv"));
+          Scanner scanner = new Scanner(inputStream);
+          scanner.nextLine(); // to skip the first line of column headers; alternatively, can get rid of column headers in csv
+          while(scanner.hasNextLine()) {
+            System.out.println("*************************GOT IN***************************");
+            String line = scanner.nextLine();
+            String[] cells = line.split(",");
+
+            String name = cells[0].trim();
+            String streetAddress = cells[1].trim(); 
+            int zipcode = Integer.parseInt(cells[2].trim());
+            double lat = Double.parseDouble(cells[3].trim());
+            double lng = Double.parseDouble(cells[4].trim());
+            String category = cells[5].trim();
+
+            storeRestaurant(new Restaurant(name, streetAddress, zipcode, lat, lng, category));
+          }
+          scanner.close();        
+        }
+        catch (FileNotFoundException e) {
+          // execution should never get here!
+        }
+      }
+      
+      loadCSV = false;
+    }
   }
 
   public Set<String> getUsers(){
-  Set<String> users = new HashSet<>();
-  Query query = new Query("Message");
-  PreparedQuery results = datastore.prepare(query);
-  for(Entity entity : results.asIterable()) {
-    users.add((String) entity.getProperty("user"));
+    Set<String> users = new HashSet<>();
+    Query query = new Query("Message");
+    PreparedQuery results = datastore.prepare(query);
+    for(Entity entity : results.asIterable()) {
+      users.add((String) entity.getProperty("user"));
+    }
+    return users;
   }
-  return users;
-}
+
+
+  /** Stores the Message in Datastore. */
+  public void storeRestaurant(Restaurant restaurant) {
+    Entity restaurantEntity = new Entity("Restaurant", restaurant.getId().toString());
+    restaurantEntity.setProperty("name", restaurant.getName());
+    restaurantEntity.setProperty("address", restaurant.getAddress());
+    restaurantEntity.setProperty("zipcode", restaurant.getZipcode());
+    restaurantEntity.setProperty("latitude", restaurant.getLatitude());
+    restaurantEntity.setProperty("longitude", restaurant.getLongitude());
+    restaurantEntity.setProperty("category", restaurant.getCategory());
+    datastore.put(restaurantEntity);
+  }
 
   /** Stores the Message in Datastore. */
   public void storeMessage(Message message) {
@@ -93,6 +144,32 @@ public class Datastore {
     return messages;
   }
 
+  public List<Restaurant> getRestaurants() {
+    List<Restaurant> restaurants = new ArrayList<>();
+
+    Query query = new Query("Restaurant");
+    PreparedQuery results = datastore.prepare(query);
+
+    for (Entity entity : results.asIterable()) {
+      try {
+        String name = (String) entity.getProperty("name");
+        String address = (String) entity.getProperty("address");
+        int zipcode = ((Long) entity.getProperty("zipcode")).intValue();
+        double lat = (double) entity.getProperty("latitude");
+        double lng = (double) entity.getProperty("longitude");
+        String category = (String) entity.getProperty("category");
+        Restaurant restaurant = new Restaurant(name, address, zipcode, lat, lng, category);
+        restaurants.add(restaurant);
+      } catch (Exception e) {
+        System.err.println("Error loading restaurants.");
+        System.err.println(entity.toString());
+        e.printStackTrace();
+      }
+    }
+
+    return restaurants;
+  }
+  
   /**
    * Gets messages posted by all users
    *

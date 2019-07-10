@@ -18,15 +18,14 @@ public class StatsPageServlet extends HttpServlet{
     private Datastore datastore;
 
     @Override
-    public void init(){
+    public void init() {
         datastore = new Datastore();
     }
 
     /* Responds with site statistics in JSON */
 
     @Override
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
-        throws IOException {
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         response.setContentType("application/json");
 
