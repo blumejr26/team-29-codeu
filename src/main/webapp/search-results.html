@@ -4,10 +4,18 @@
   <title>Restaurants Results</title>
   <link rel="stylesheet" href="/css/main.css">
   <link rel="stylesheet" href="/css/results-page.css">
+  <script src="/js/navigation-loader.js"></script>
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCTRQ-3PrBBM1ZUThSjUE6p6Zet1sjcapk&libraries=places"></script>
   <script src="/js/results-loader.js"></script>
 </head>
-<body onload="initialize();">
+<body onload="initialize(); addLoginOrLogoutLinkToNavigation();">
+    <nav>
+      <ul id="navigation">
+        <li><a href="/">Home</a></li>
+        <li><a href="/search-results.html">Search</a></li>
+        <li><a href="/aboutus.html">About Our Team</a></li>
+      </ul>
+    </nav>
   <form id="search-form" action="/search" method="GET">
     Enter a location:
     <br/>

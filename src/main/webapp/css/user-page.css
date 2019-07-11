@@ -17,23 +17,6 @@
 /* Set the size of the message input to be 100 pixels high
    and will fill the width of its parent element. */
 
-body {
-  margin: 0;
-  background: linear-gradient(white, #ccccff) fixed;
-  font-family: sans-serif;
-}
-
-nav {
-  background-color: #ccccff;
-  font-size: 18pt;
-  padding: 10px;
-}
-
-nav a {
-  color: black;
-  margin-right: 10px;
-}
-
 h2 {
   margin: 0;
 }

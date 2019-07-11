@@ -1,5 +1,8 @@
 const urlParams = new URLSearchParams(window.location.search);
-const address = urlParams.get('location').trim();
+let address = urlParams.get('location');
+if (address) {
+	address = address.trim();
+}
 let parameterLatitude;
 let parameterLongitude;
 let markersDict = new Object();
@@ -120,6 +123,10 @@ function buildRestaurantDiv(restaurant, dist) {
 }
 
 function initialize() {
+	if (!address) {
+		// Do nothing if no address
+		return;
+	}
   var request = {
     query: address,
     fields: ['name', 'geometry'],
