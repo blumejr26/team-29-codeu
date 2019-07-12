@@ -1,11 +1,13 @@
 const urlParams = new URLSearchParams(window.location.search);
-const address = urlParams.get('location').trim();
+let address = urlParams.get('location');
+if (address) {
+	address = address.trim();
+}
 let parameterLatitude;
 let parameterLongitude;
-var userLatitude = 40.4;
-var userLongitude = -79.9;
-var markers = [];
+let markersDict = new Object();
 let restaurantsList;
+let map;
 
 
 
@@ -22,11 +24,11 @@ function createRestaurantMarker(map, lat, lng, name, address, zipcode) {
   marker.addListener('click', function() {
     infoWindow.open(map, marker);
   });
-  markers.push(marker);
+  markersDict[name] = marker;
 }
 
-function filterAndDisplayResults(map) {
-  clearResults(map);
+function filterAndDisplayResults() {
+  clearResults();
   const resultsContainer = document.getElementById('results-container');
   if (restaurantsList.length == 0) {
     resultsContainer.innerHTML = '<p>There are no restaurants matching this criteria.</p>';
@@ -37,14 +39,41 @@ function filterAndDisplayResults(map) {
   var key = document.getElementById('selectSortKey').value;
   var radius = document.getElementById('searchRadius').value;
   (restaurantsList.sort(sortBy(key))).forEach((restaurant) => {
-    if (restaurant.distance < radius) {
+    var dist = distance(parseFloat(parameterLatitude), parseFloat(parameterLongitude), restaurant.lat, restaurant.lng);
+    if (dist < radius) {
       // Create a marker for each restaurant on the map
-      createRestaurantMarker(map, restaurant.lat, restaurant.lng, restaurant.name, restaurant.address, restaurant.zipcode);
+      if (markersDict.hasOwnProperty(restaurant.name)) {
+        markersDict[restaurant.name].setMap(map);
+      }
+      else {
+        createRestaurantMarker(map, restaurant.lat, restaurant.lng, restaurant.name, restaurant.address, restaurant.zipcode);
+      }
       //List each restaurant
-      const restaurantDiv = buildRestaurantDiv(restaurant);
+      const restaurantDiv = buildRestaurantDiv(restaurant, dist);
       resultsContainer.appendChild(restaurantDiv);
     }
+    else {
+      if (markersDict.hasOwnProperty(restaurant.name)) {
+        markersDict[restaurant.name].setMap(null);
+      }
+      else {
+        createRestaurantMarker(null, restaurant.lat, restaurant.lng, restaurant.name, restaurant.address, restaurant.zipcode);
+      }
+    }
   });
+}
+
+function distance(lat1, lng1, lat2, lng2) {
+  if ((lat1 == lat2) && (lng1 == lng2)) {
+    return 0;
+  } else {
+    theta = lng1 - lng2;
+    dist = Math.sin(lat1 * Math.PI / 180) * Math.sin(lat2 * Math.PI / 180) + Math.cos(lat1 * Math.PI / 180) *                           Math.cos(lat2 * Math.PI / 180) * Math.cos(theta * Math.PI / 180);
+    dist = Math.acos(dist);
+    dist = dist * (180 / Math.PI);
+    dist = dist * 60 * 1.1515;
+    return (dist);
+  }
 }
 
 function sortBy(key) {
@@ -58,18 +87,18 @@ function sortBy(key) {
   }
 }
 
-function clearResults(map) {
-  for (var i = 2; i < markers.length; i++) {
-    markers[i].setMap(null);
-  }
-  markers = [markers[0], markers[1]];
+function clearResults() {
+//  for (var i = 1; i < markersDict.length; i++) {
+//    markersDict[i].setMap(null);
+//  }
+//  markersDict = [markersDict[0], markersDict[1]];
   var results = document.getElementById('results-container');
   while(results.lastChild){
     results.removeChild(results.firstChild);
   }
 }
 
-function buildRestaurantDiv(restaurant) {  
+function buildRestaurantDiv(restaurant, dist) {  
   const nameLink = document.createElement('a');
   nameLink.classList.add('restaurant-name');
   nameLink.appendChild(document.createTextNode(restaurant.name));
@@ -82,7 +111,7 @@ function buildRestaurantDiv(restaurant) {
   
   const categoryDiv = document.createElement('div');
   categoryDiv.classList.add('restaurant-category');
-  categoryDiv.innerHTML = restaurant.category+'\t'+Math.round(restaurant.distance).toString(10)+" miles";
+  categoryDiv.innerHTML = restaurant.category+'\t'+Math.round(dist).toString(10)+" miles";
     
   const restaurantDiv = document.createElement('div');
   restaurantDiv.classList.add('restaurant-div');
@@ -94,64 +123,57 @@ function buildRestaurantDiv(restaurant) {
 }
 
 function initialize() {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(function(position) {
-      userLatitude = position.coords.latitude;
-      userLongitude = position.coords.longitude;
-    }, function() {
-    });
-  }
+	if (!address) {
+		// Do nothing if no address
+		return;
+	}
+  var request = {
+    query: address,
+    fields: ['name', 'geometry'],
+    locationBias: {lat: 49.1, lng: -79.9}
+  };
+  var service = new google.maps.places.PlacesService(document.createElement('div'));
+  service.findPlaceFromQuery(request, function(results, status) {
+//    console.log(results);
+    if (status === google.maps.places.PlacesServiceStatus.OK) {
+      parameterLatitude = (results[0].geometry.location.lat()).toString();
+      parameterLongitude = (results[0].geometry.location.lng()).toString();
+      
+      // Create a map
+      map = new google.maps.Map(document.getElementById('map'), {
+        center: {lat: parseFloat(parameterLatitude), lng: parseFloat(parameterLongitude)},
+        zoom: 11
+      });
+      var searchMarker = new google.maps.Marker({
+        position: {lat: parseFloat(parameterLatitude), lng: parseFloat(parameterLongitude)},
+        map: map
+      });
+      markersDict["user-search"] = searchMarker;
 
-  if (address === '') {
-    parameterLatitude = userLatitude.toString();
-    parameterLongitude = userLongitude.toString();
-  }
-  else {
-    var request = {
-      query: address,
-      fields: ['name', 'geometry'],
-      locationBias: {lat: userLatitude, lng: userLongitude}
-    };
-    var service = new google.maps.places.PlacesService(document.createElement('div'));
-    service.findPlaceFromQuery(request, function(results, status) {
-      if (status === google.maps.places.PlacesServiceStatus.OK) {
-        parameterLatitude = (results[0].geometry.location.lat()).toString();
-        parameterLongitude = (results[0].geometry.location.lng()).toString();
-      }
-    });
-  }
+      fetch('/restaurant-data?latitude='+parameterLatitude+'&longitude='+parameterLongitude).then(function(response) {
+        return response.json();
+      }).then((restaurants) => {
+        restaurantsList = restaurants;
+        filterAndDisplayResults();
+      });
 
-  // Create a map
-  const map = new google.maps.Map(document.getElementById('map'), {
-    center: {lat: parseFloat(parameterLatitude), lng: parseFloat(parameterLongitude)},
-    zoom: 11
-  });
-  var searchMarker = new google.maps.Marker({
-    position: {lat: parseFloat(parameterLatitude), lng: parseFloat(parameterLongitude)},
-    map: map
-  });
-  const userMarker = new google.maps.Marker({
-    position: {lat: userLatitude, lng: userLongitude},
-    map: map
-  });
-  markers.push(searchMarker);
-  markers.push(userMarker);
-    
-  fetch('/restaurant-data?latitude='+parameterLatitude+'&longitude='+parameterLongitude).then(function(response) {
-    return response.json();
-  }).then((restaurants) => {
-    restaurantsList = restaurants;
-    filterAndDisplayResults(map, 'distance');
+    } else {
+      map = new google.maps.Map(document.getElementById('map'), {
+        center: {lat: 0, lng: 0},
+        zoom: 11
+      });
+      document.getElementById('results-container').innerHTML = "we don't recognize this location :(";
+    }
   });
 
   var selectSortKey = document.getElementById('selectSortKey');
   selectSortKey.addEventListener('change', function() {
-    filterAndDisplayResults(map);
+    filterAndDisplayResults();
   });
   
   var searchRadius = document.getElementById('searchRadius');
   searchRadius.addEventListener('input', function() {
-    filterAndDisplayResults(map);
+    filterAndDisplayResults();
   });
 
 }
