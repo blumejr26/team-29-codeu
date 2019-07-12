@@ -24,12 +24,14 @@ function addLoginOrLogoutLinkToNavigation() {
     console.warn('Navigation element not found!');
     return;
   }
+  navigationElement.appendChild(document.createTextNode("(Loading login status...)"));
 
   fetch('/login-status')
       .then((response) => {
         return response.json();
       })
       .then((loginStatus) => {
+        navigationElement.removeChild(navigationElement.lastChild);
         if (loginStatus.isLoggedIn) {
           navigationElement.appendChild(createListItem(createLink(
               '/user-page.html?user=' + loginStatus.username, 'Your Page')));
