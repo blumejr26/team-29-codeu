@@ -25,21 +25,21 @@ public class Restaurant {
   private String name;
   private String address;
   private int zipcode;
-  private double latitude;
-  private double longitude;
+  private double lat;
+  private double lng;
   private String category;
 
   /**
    * Constructs a new {@link Message} posted by {@code user} with {@code text} content. Generates a
    * random ID and uses the current system time for the creation time.
    */
-  public Restaurant(String name, String address, int zipcode, double latitude, double longitude, String category) {
+  public Restaurant(String name, String address, int zipcode, double lat, double lng, String category) {
     this.id = UUID.randomUUID();
     this.name = name;
     this.address = address;
     this.zipcode = zipcode;
-    this.latitude = latitude;
-    this.longitude = longitude;
+    this.lat = lat;
+    this.lng = lng;
     this.category = category;
   }
 
@@ -58,10 +58,10 @@ public class Restaurant {
   }
   
   public double getLatitude() {
-    return latitude;
+    return lat;
   }
 
-  public double getLongitude() {  return longitude; }
+  public double getLongitude() {  return lng; }
 
   public String getCategory() { return category; }
 }
