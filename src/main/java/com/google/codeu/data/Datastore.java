@@ -101,6 +101,18 @@ public class Datastore {
   }
 
   /** Stores the Message in Datastore. */
+  public void storeReview(Review review) {
+    Entity reviewEntity = new Entity("Review", review.getId().toString());
+    reviewEntity.setProperty("user", review.getUser());
+    reviewEntity.setProperty("restaurant", review.getRestaurant());
+    reviewEntity.setProperty("text", review.getText());
+    reviewEntity.setProperty("rating", review.getRating());
+    reviewEntity.setProperty("timestamp", review.getTimestamp());
+
+    datastore.put(reviewEntity);
+  }  
+
+  /** Stores the Message in Datastore. */
   public void storeMessage(Message message) {
     Entity messageEntity = new Entity("Message", message.getId().toString());
     messageEntity.setProperty("user", message.getUser());
@@ -168,6 +180,31 @@ public class Datastore {
     }
 
     return restaurants;
+  }
+  
+  public List<Review> getReviews(String restaurant) {
+    List<Review> reviews = new ArrayList<>();
+
+    Query query = new Query("Review").setFilter(new Query.FilterPredicate("restaurant", FilterOperator.EQUAL, restaurant))
+            .addSort("timestamp", SortDirection.DESCENDING);
+    PreparedQuery results = datastore.prepare(query);
+
+    for (Entity entity : results.asIterable()) {
+      try {
+        String user = (String) entity.getProperty("user");
+        String text = (String) entity.getProperty("text");
+        int rating = ((Long) entity.getProperty("rating")).intValue();
+        long timestamp = (long) entity.getProperty("timestamp");
+        Review review = new Review(user, restaurant, text, rating, timestamp);
+        reviews.add(review);
+      } catch (Exception e) {
+        System.err.println("Error loading restaurants.");
+        System.err.println(entity.toString());
+        e.printStackTrace();
+      }
+    }
+
+    return reviews;
   }
   
   /**
