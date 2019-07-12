@@ -19,49 +19,49 @@ package com.google.codeu.data;
 import java.util.UUID;
 
 /** A single message posted by a user. */
-public class Review {
+public class Restaurant {
 
   private UUID id;
-  private String restaurant;
-  private String user;
-  private String text;
-  private int rating;
-  private long timestamp;
+  private String name;
+  private String address;
+  private int zipcode;
+  private double latitude;
+  private double longitude;
+  private String category;
 
   /**
-   * Constructs a new {@link Review} posted by {@code user} with {@code text} content. Generates a
+   * Constructs a new {@link Message} posted by {@code user} with {@code text} content. Generates a
    * random ID and uses the current system time for the creation time.
    */
-  public Review(String user, String restaurant, String text, int rating, long timestamp) {
+  public Restaurant(String name, String address, int zipcode, double latitude, double longitude, String category) {
     this.id = UUID.randomUUID();
-    this.restaurant = restaurant;
-    this.user = user;
-    this.text = text;
-    this.rating = rating;
-    this.timestamp = timestamp;
+    this.name = name;
+    this.address = address;
+    this.zipcode = zipcode;
+    this.latitude = latitude;
+    this.longitude = longitude;
+    this.category = category;
   }
 
   public UUID getId() {
     return id;
   }
 
-  public String getUser() {
-    return user;
+  public String getName() {
+    return name;
   }
 
-  public String getRestaurant() {
-    return restaurant;
+  public String getAddress() { return address;  }
+  
+  public int getZipcode() {
+    return zipcode;
   }
   
-  public String getText() {
-    return text;
-  }
-  
-  public long getRating() {
-    return rating;
+  public double getLatitude() {
+    return latitude;
   }
 
-  public long getTimestamp() {
-    return timestamp;
-  }
+  public double getLongitude() {  return longitude; }
+
+  public String getCategory() { return category; }
 }
