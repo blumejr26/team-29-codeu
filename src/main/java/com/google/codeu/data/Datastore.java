@@ -245,5 +245,63 @@ public class Datastore {
 
   }
 
+  /** Stores the User's Favorite Restaurants in Datastore. */
+  public void storeFavorite(Favorite favorite) {
+    Entity favoriteEntity = new Entity("Favorite", favorite.getId().toString());
+    favoriteEntity.setProperty("user", favorite.getUser());
+    favoriteEntity.setProperty("text", favorite.getText());
+
+    datastore.put(favoriteEntity);
+  }
+
+  public List<Favorite> getFavorites(String user) {
+    List<Favorite> favorites = new ArrayList<>();
+
+    Query query =
+            new Query("Favorite")
+                    .setFilter(new Query.FilterPredicate("user", FilterOperator.EQUAL, user));
+    PreparedQuery results = datastore.prepare(query);
+
+    for (Entity entity : results.asIterable()) {
+      try {
+        String idString = entity.getKey().getName();
+        UUID id = UUID.fromString(idString);
+        String text = (String) entity.getProperty("text");
+
+        Favorite favorite = new Favorite(id, user, text);
+        favorites.add(favorite);
+      } catch (Exception e) {
+        System.err.println("Error reading favorite restaurants.");
+        System.err.println(entity.toString());
+        e.printStackTrace();
+      }
+    }
+
+    return favorites;
+  }
+
+
+  public List<Favorite> getAllFavorites() {
+    List<Favorite> favorites = new ArrayList<>();
+
+    Query query = new Query("Favorites");
+    PreparedQuery results = datastore.prepare(query);
+
+    for (Entity entity : results.asIterable()) {
+      try {
+        String user = (String) entity.getProperty("user");
+        List<Favorite> userFavorites = getFavorites(user);
+        for (Favorite favorite : userFavorites) {
+          favorites.add(favorite);
+        }
+      } catch (Exception e) {
+        System.err.println("Error reading user's favorite restaurants.");
+        System.err.println(entity.toString());
+        e.printStackTrace();
+      }
+    }
+
+    return favorites;
+  }
 
 }

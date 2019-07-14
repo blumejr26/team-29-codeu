@@ -22,6 +22,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.google.codeu.data.Datastore;
+import com.google.codeu.data.Review;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import java.util.Scanner;
@@ -31,7 +34,27 @@ import java.util.Scanner;
 @WebServlet("/eatschart")
 public class ChartsServlet extends HttpServlet {
 
-  private JsonArray restaurantRatingArray;
+    private Datastore datastore;
+
+    @Override
+    public void init() {
+      datastore = new Datastore();
+    }
+
+  // This won't compile yet, pretty much got stuck here with creating a servlet to put the restaurant data in JSON form and use it in a javascript to display the chart
+    @Override
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+      response.setContentType("application/json");
+
+      List<Review> reviews = datastore.getReviews();
+      Gson gson = new Gson();
+      String json = gson.toJson(reviews);
+      response.getWriter().println(json);
+    }
+}
+
+
+ /* private JsonArray restaurantRatingArray;
 
   private static class restaurantRating {
     String name;
@@ -66,4 +89,5 @@ public class ChartsServlet extends HttpServlet {
     response.setContentType("application/json");
     response.getOutputStream().println(restaurantRatingArray.toString());
   }
-}
+
+}*/
