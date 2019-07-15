@@ -25,6 +25,8 @@ limitations under the License.
     <script src="/js/navigation-loader.js"></script>
     <script src="https://www.gstatic.com/charts/loader.js"></script>
     <script src="/js/chart-loader.js"></script>
+    <script src="/js/favorites-loader.js"></script>
+
   </head>
   <body onload="buildUI(); drawChart(); addLoginOrLogoutLinkToNavigation();">
     <nav>
@@ -51,6 +53,27 @@ limitations under the License.
 
     <h2>Top Rated Restaurants</h2>
     <div id="restaurant_chart"></div>
+    <hr/>
+
+
+    <h3>Favorite Restaurants</h3>
+    <form id="favorites-form" action="/favorites" method="POST">
+      Add a Favorite Restaurant:
+      <br/>
+      <textarea id="text" id="restaurant-input"></textarea>
+      <br/>
+      <input type="submit" value="Submit">
+    </form>
+
+    <div id="favorites-list-container"></div>
+
+    <!-- <h3>My Favorite Restaurants</h3>
+    <div id="favorites-list-container">
+      <ol id="list"></ol>
+    </div>
+  <input type="button" value="Save List" onclick="()"/>
+  <div id="saveList"></div> -->
+
 
   </body>
 </html>

@@ -32,7 +32,7 @@ public class RestaurantDataServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     response.setContentType("application/json");
     
-    List<Restaurant> restaurants = datastore.getRestaurants();
+    List <Restaurant> restaurants = datastore.getRestaurants();
     Gson gson = new Gson();
     String json = gson.toJson(restaurants);
     response.getWriter().println(json);

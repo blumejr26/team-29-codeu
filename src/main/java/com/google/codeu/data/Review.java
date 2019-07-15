@@ -29,7 +29,7 @@ public class Review {
   private long timestamp;
 
   /**
-   * Constructs a new {@link Message} posted by {@code user} with {@code text} content. Generates a
+   * Constructs a new {@link Review} posted by {@code user} with {@code text} content. Generates a
    * random ID and uses the current system time for the creation time.
    */
   public Review(String user, String restaurant, String text, int rating, long timestamp) {
