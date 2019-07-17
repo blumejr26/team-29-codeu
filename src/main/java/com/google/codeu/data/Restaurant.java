@@ -11,9 +11,9 @@ public class Restaurant {
   private double lat;
   private double lng;
   private String category;
-
-  public Restaurant(String name, String address, int zipcode, double lat, double lng, String category) {
-    this.id = UUID.randomUUID();
+  
+  public Restaurant(UUID id, String name, String address, int zipcode, double lat, double lng, String category) {
+    this.id = id;
     this.name = name;
     this.address = address;
     this.zipcode = zipcode;

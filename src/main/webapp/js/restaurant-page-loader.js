@@ -1,8 +1,8 @@
 const urlParams = new URLSearchParams(window.location.search);
-const name = urlParams.get('name');
+const id = urlParams.get('id');
 
 function loadRestaurantData() {
-  fetch('/restaurant?name='+name).then(function(response) {
+  fetch('/restaurant?id='+id.toString()).then(function(response) {
     return response.json();
   }).then((restaurant) => {
     if (restaurant === '') {

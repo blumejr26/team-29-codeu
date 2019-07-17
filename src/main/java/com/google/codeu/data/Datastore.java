@@ -19,12 +19,14 @@ package com.google.codeu.data;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.datastore.FetchOptions;
-//import com.google.appengine.api.datastore.EntityNotFoundException;
+import com.google.appengine.api.datastore.EntityNotFoundException;
 import java.io.File;
 import java.io.InputStream;
 import java.io.FileInputStream;
@@ -53,7 +55,6 @@ public class Datastore {
           Scanner scanner = new Scanner(inputStream);
           scanner.nextLine(); // to skip the first line of column headers; alternatively, can get rid of column headers in csv
           while(scanner.hasNextLine()) {
-            System.out.println("*************************GOT IN***************************");
             String line = scanner.nextLine();
             String[] cells = line.split(",");
 
@@ -64,7 +65,7 @@ public class Datastore {
             double lng = Double.parseDouble(cells[4].trim());
             String category = cells[5].trim();
 
-            storeRestaurant(new Restaurant(name, streetAddress, zipcode, lat, lng, category));
+            storeRestaurant(new Restaurant(UUID.randomUUID(), name, streetAddress, zipcode, lat, lng, category));
           }
           scanner.close();        
         }
@@ -170,7 +171,7 @@ public class Datastore {
         double lat = (double) entity.getProperty("latitude");
         double lng = (double) entity.getProperty("longitude");
         String category = (String) entity.getProperty("category");
-        Restaurant restaurant = new Restaurant(name, address, zipcode, lat, lng, category);
+        Restaurant restaurant = new Restaurant(UUID.fromString(entity.getKey().getName()), name, address, zipcode, lat, lng, category);
         restaurants.add(restaurant);
       } catch (Exception e) {
         System.err.println("Error loading restaurants.");
@@ -182,25 +183,16 @@ public class Datastore {
     return restaurants;
   }
   
-  public List<Restaurant> getRestaurant(String name) {
-    List<Restaurant> restaurants = new ArrayList<>();
-    Query query = new Query("Restaurant").setFilter(new Query.FilterPredicate("name", FilterOperator.EQUAL, name));
-    PreparedQuery results = datastore.prepare(query);
-    for (Entity entity : results.asIterable()) {
-      try {
-        String address = (String) entity.getProperty("address");
-        int zipcode = ((Long) entity.getProperty("zipcode")).intValue();
-        double lat = (double) entity.getProperty("latitude");
-        double lng = (double) entity.getProperty("longitude");
-        String category = (String) entity.getProperty("category");
-        Restaurant restaurant = new Restaurant(name, address, zipcode, lat, lng, category);
-        restaurants.add(restaurant);
-      } catch (Exception e) {
-        System.err.println("Error finding restaurant: " + name);
-        e.printStackTrace();
-      }
-    }
-    return restaurants;
+  public Restaurant getRestaurant(String id) throws EntityNotFoundException {
+    Entity entity = datastore.get(KeyFactory.createKey("Restaurant", id));
+    String name = (String) entity.getProperty("name");
+    String address = (String) entity.getProperty("address");
+    int zipcode = ((Long) entity.getProperty("zipcode")).intValue();
+    double lat = (double) entity.getProperty("latitude");
+    double lng = (double) entity.getProperty("longitude");
+    String category = (String) entity.getProperty("category");
+    Restaurant restaurant = new Restaurant(UUID.fromString(id), name, address, zipcode, lat, lng, category);
+    return restaurant;
     
   }
   

@@ -28,16 +28,27 @@ public class RestaurantPageServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     response.setContentType("application/json");
     
-    String name = request.getParameter("name");
-    List<Restaurant> restaurants = datastore.getRestaurant(name);
-    if (restaurants.size() == 0) {
-      response.getWriter().println("");
-    }
-    else {
+    try {
+      String id = request.getParameter("id");
+      Restaurant restaurant = datastore.getRestaurant(id);
       Gson gson = new Gson();
-      String json = gson.toJson(restaurants.get(0));
+      String json = gson.toJson(restaurant);
       response.getWriter().println(json);
     }
+    catch (Exception e) {
+      response.getWriter().println("");
+    }
+    
+    
+//    List<Restaurant> restaurants = datastore.getRestaurant(name);
+//    if (restaurants.size() == 0) {
+//      response.getWriter().println("");
+//    }
+//    else {
+//      Gson gson = new Gson();
+//      String json = gson.toJson(restaurants.get(0));
+//      response.getWriter().println(json);
+//    }
   }
 
 }

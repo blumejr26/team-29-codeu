@@ -102,7 +102,7 @@ function buildRestaurantDiv(restaurant, dist) {
   const nameLink = document.createElement('a');
   nameLink.classList.add('restaurant-name');
   nameLink.appendChild(document.createTextNode(restaurant.name));
-  nameLink.href = '/restaurant-page.html?name=' + restaurant.name; // for the generic link
+  nameLink.href = '/restaurant-page.html?id=' + restaurant.id; // for the generic link
 //  nameLink.href = '/restaurant1.html';  // using the static single restaurant page link for now
 
   const addressDiv = document.createElement('div');
