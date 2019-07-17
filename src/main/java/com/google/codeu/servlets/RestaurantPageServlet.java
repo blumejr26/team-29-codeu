@@ -14,11 +14,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-/**
- * Returns Restaurant data as a JSON array, e.g. [{"lat": 38.4404675, "lng": -122.7144313}]
- */
-@WebServlet("/results")
-public class ResultsServlet extends HttpServlet {
+
+@WebServlet("/restaurant")
+public class RestaurantPageServlet extends HttpServlet {
   private Datastore datastore;
 
   @Override
@@ -30,11 +28,16 @@ public class ResultsServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     response.setContentType("application/json");
     
-    List<Restaurant> restaurants = datastore.getAllRestaurants();
-    Gson gson = new Gson();
-    String json = gson.toJson(restaurants);
-    response.getWriter().println(json);
-    
+    String name = request.getParameter("name");
+    List<Restaurant> restaurants = datastore.getRestaurant(name);
+    if (restaurants.size() == 0) {
+      response.getWriter().println("");
+    }
+    else {
+      Gson gson = new Gson();
+      String json = gson.toJson(restaurants.get(0));
+      response.getWriter().println(json);
+    }
   }
 
 }

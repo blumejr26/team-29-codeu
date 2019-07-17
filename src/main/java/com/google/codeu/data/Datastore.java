@@ -156,7 +156,7 @@ public class Datastore {
     return messages;
   }
 
-  public List<Restaurant> getRestaurants() {
+  public List<Restaurant> getAllRestaurants() {
     List<Restaurant> restaurants = new ArrayList<>();
 
     Query query = new Query("Restaurant");
@@ -180,6 +180,28 @@ public class Datastore {
     }
 
     return restaurants;
+  }
+  
+  public List<Restaurant> getRestaurant(String name) {
+    List<Restaurant> restaurants = new ArrayList<>();
+    Query query = new Query("Restaurant").setFilter(new Query.FilterPredicate("name", FilterOperator.EQUAL, name));
+    PreparedQuery results = datastore.prepare(query);
+    for (Entity entity : results.asIterable()) {
+      try {
+        String address = (String) entity.getProperty("address");
+        int zipcode = ((Long) entity.getProperty("zipcode")).intValue();
+        double lat = (double) entity.getProperty("latitude");
+        double lng = (double) entity.getProperty("longitude");
+        String category = (String) entity.getProperty("category");
+        Restaurant restaurant = new Restaurant(name, address, zipcode, lat, lng, category);
+        restaurants.add(restaurant);
+      } catch (Exception e) {
+        System.err.println("Error finding restaurant: " + name);
+        e.printStackTrace();
+      }
+    }
+    return restaurants;
+    
   }
   
   public List<Review> getReviews(String restaurant) {
