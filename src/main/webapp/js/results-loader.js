@@ -150,7 +150,7 @@ function initialize() {
       });
       markersDict["user-search"] = searchMarker;
 
-      fetch('/restaurant-data?latitude='+parameterLatitude+'&longitude='+parameterLongitude).then(function(response) {
+      fetch('/results?latitude='+parameterLatitude+'&longitude='+parameterLongitude).then(function(response) {
         return response.json();
       }).then((restaurants) => {
         restaurantsList = restaurants;
