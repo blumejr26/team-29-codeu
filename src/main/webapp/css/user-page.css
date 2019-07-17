@@ -19,12 +19,13 @@
 
 body {
   margin: 0;
-  background: linear-gradient(white, #ccccff) fixed;
-  font-family: sans-serif;
+  background: white fixed;
+  font-family: Helvetica;
 }
 
 nav {
-  background-color: #ccccff;
+  
+  background-color: #d3d3d3;
   font-size: 18pt;
   padding: 10px;
 }
