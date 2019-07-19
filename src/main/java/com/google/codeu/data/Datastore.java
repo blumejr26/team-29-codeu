@@ -235,6 +235,29 @@ public class Datastore {
     return restaurants;
   }
   
+  public List<RequestedRestaurant> getRequestedRestaurants() {
+    List<RequestedRestaurant> restaurants = new ArrayList<>();
+
+    Query query = new Query("RequestedRestaurant");
+    PreparedQuery results = datastore.prepare(query);
+
+    for (Entity entity : results.asIterable()) {
+      try {
+        String name = (String) entity.getProperty("name");
+        String city = (String) entity.getProperty("city");
+        String user = (String) entity.getProperty("user");
+        RequestedRestaurant restaurant = new RequestedRestaurant(UUID.fromString(entity.getKey().getName()), name, city, user);
+        restaurants.add(restaurant);
+      } catch (Exception e) {
+        System.err.println("Error loading restaurants.");
+        System.err.println(entity.toString());
+        e.printStackTrace();
+      }
+    }
+
+    return restaurants;
+  }
+  
   public Restaurant getRestaurant(String id) throws EntityNotFoundException {
     Entity entity = datastore.get(KeyFactory.createKey("Restaurant", id));
     String name = (String) entity.getProperty("name");

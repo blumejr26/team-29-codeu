@@ -42,24 +42,5 @@ public class ResultsServlet extends HttpServlet {
     response.getWriter().println(json);
     
   }
-  
-  @Override
-  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    UserService userService = UserServiceFactory.getUserService();
-    if (!userService.isUserLoggedIn()) {
-      response.sendRedirect("/index.html");
-      return;
-    }
-
-    String user = userService.getCurrentUser().getEmail();
-    String name = Jsoup.clean(request.getParameter("restaurant-name"), Whitelist.none());
-    String city = Jsoup.clean(request.getParameter("city"), Whitelist.none());
-    String searchValue = Jsoup.clean(request.getParameter("search-value"), Whitelist.none());
-    
-    RequestedRestaurant restaurant = new RequestedRestaurant(UUID.randomUUID(), name, city, user);
-    datastore.storeRequestedRestaurant(restaurant);
-
-    response.sendRedirect("/search-results.html?location="+searchValue);
-  }
 
 }
