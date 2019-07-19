@@ -64,10 +64,21 @@ public class Datastore {
             double lat = Double.parseDouble(cells[3].trim());
             double lng = Double.parseDouble(cells[4].trim());
             String category = cells[5].trim();
+            Restaurant restaurant = new Restaurant(UUID.randomUUID(), name, streetAddress, zipcode, lat, lng, category);
 
-            storeRestaurant(new Restaurant(UUID.randomUUID(), name, streetAddress, zipcode, lat, lng, category));
+            storeRestaurant(restaurant);
           }
           scanner.close();        
+          
+          InputStream inputDealStream = new FileInputStream(new File("WEB-INF/deals.csv"));
+          Scanner dealsScanner = new Scanner(inputDealStream);
+          dealsScanner.nextLine();
+          while(dealsScanner.hasNextLine()) {
+            String deal = dealsScanner.nextLine();
+            String[] cols = deal.split(",");
+            storeDeal(cols[0].trim(), cols[1].trim());
+          }
+          dealsScanner.close();
         }
         catch (FileNotFoundException e) {
           // execution should never get here!
@@ -88,7 +99,13 @@ public class Datastore {
     return users;
   }
 
-
+  public void storeDeal(String restaurant, String deal) {
+    Entity dealEntity = new Entity("Deal");
+    dealEntity.setProperty("restaurant", restaurant);
+    dealEntity.setProperty("deal", deal);
+    datastore.put(dealEntity);
+  }
+  
   /** Stores the Message in Datastore. */
   public void storeRestaurant(Restaurant restaurant) {
     Entity restaurantEntity = new Entity("Restaurant", restaurant.getId().toString());
