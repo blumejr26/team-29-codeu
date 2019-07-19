@@ -99,12 +99,16 @@ public class Datastore {
     return users;
   }
   
-  public void storeFavorites(Favorite fav) {
-    Entity favEntity = new Entity("Favorite");
-    favEntity.setProperty("restaurantId", fav.getRestaurantId());
-    favEntity.setProperty("restaurantName", fav.getRestaurantName());
-    favEntity.setProperty("user", fav.getUser());
-    datastore.put(favEntity);
+  public void storeFavorite(Favorite fav, String mode) {
+    if (mode.equals("add")) {
+      Entity favEntity = new Entity("Favorite", fav.getId().toString());
+      favEntity.setProperty("restaurantId", fav.getRestaurantId());
+      favEntity.setProperty("restaurantName", fav.getRestaurantName());
+      favEntity.setProperty("user", fav.getUser());
+      datastore.put(favEntity);
+    } else {
+      datastore.delete(KeyFactory.createKey("Favorite", fav.getId().toString()));
+    }
   }
 
   public void storeDeal(String restaurant, String deal) {
@@ -152,12 +156,15 @@ public class Datastore {
   public List<Favorite> getUserFavorites(String user) {
     List<Favorite> favs = new ArrayList<>();
     
-    Query query = new Query("Deal").setFilter(new Query.FilterPredicate("user", FilterOperator.EQUAL, user));
+    Query query = new Query("Favorite").setFilter(new Query.FilterPredicate("user", FilterOperator.EQUAL, user));
     PreparedQuery results = datastore.prepare(query);
       
     for (Entity entity : results.asIterable()) {
       try {
-        Favorite fav = new Favorite(user, (String) entity.getProperty("restaurantId"), (String) entity.getProperty("restaurantName"));
+        String restaurantId = (String) entity.getProperty("restaurantId");
+        String restaurantName = (String) entity.getProperty("restaurantName");
+        UUID id = UUID.fromString((String) entity.getKey().getName());
+        Favorite fav = new Favorite(id, user, restaurantId, restaurantName);
         favs.add(fav);
       } catch (Exception e) {
         System.err.println("Error reading favorites.");

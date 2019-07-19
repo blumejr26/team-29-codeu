@@ -99,7 +99,14 @@ limitations under the License.
       </form> 
     </div>
     <hr>
-    <div id="favorites"></div>
+    <div id="favorites">
+      <form id="fav-form" action="/favorites" method="POST">
+        <input type="hidden" name="restaurant-id-fav" id="restaurant-id-fav">
+        <input type="hidden" name="restaurant-name-fav" id="restaurant-name-fav">
+        <input type="hidden" name="mode" id="fav-mode">
+        <input type="submit" id="fav-button">
+      </form>
+    </div>
 
     <!--script for slide show --> 
 <!--

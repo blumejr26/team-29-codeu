@@ -54,6 +54,25 @@ function loadRestaurantData() {
         }
         document.getElementById('reviews').appendChild(reviewsDiv);
       });
+      
+      document.getElementById('restaurant-id-fav').value = id;
+      document.getElementById('restaurant-name-fav').value = restaurant.name;
+      fetch('/favorites').then(function(response) {
+        return response.json();
+      }).then(userFavs => {
+        var found = false;
+        userFavs.forEach(fav => {
+          if (fav.restaurantName === restaurant.name) {
+            document.getElementById('fav-mode').value = 'remove';
+            document.getElementById('fav-button').value = 'Remove from favorites';
+            found = true;
+          }
+        });
+        if (!found) {
+          document.getElementById('fav-mode').value = 'add';
+          document.getElementById('fav-button').value = 'Add to favorites!';
+        }
+      });
     }
   });
 }

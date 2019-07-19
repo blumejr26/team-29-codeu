@@ -42,6 +42,7 @@ function buildUI() {
         const link = document.createElement('a');
         link.appendChild(document.createTextNode(fav.restaurantName));
         link.href = '/restaurant-page.html?id='+fav.restaurantId;
+        document.getElementById('favorites').appendChild(link);
       });
     }
   });
