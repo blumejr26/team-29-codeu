@@ -72,7 +72,7 @@ public class Datastore {
           
           InputStream inputDealStream = new FileInputStream(new File("WEB-INF/deals.csv"));
           Scanner dealsScanner = new Scanner(inputDealStream);
-          dealsScanner.nextLine();
+          //dealsScanner.nextLine();
           while(dealsScanner.hasNextLine()) {
             String deal = dealsScanner.nextLine();
             String[] cols = deal.split(",");
@@ -102,7 +102,7 @@ public class Datastore {
   public void storeDeal(String restaurant, String deal) {
     Entity dealEntity = new Entity("Deal");
     dealEntity.setProperty("restaurant", restaurant);
-    dealEntity.setProperty("deal", deal);
+    dealEntity.setProperty("text", deal);
     datastore.put(dealEntity);
   }
   
@@ -174,6 +174,25 @@ public class Datastore {
     return messages;
   }
 
+  public List<String> getRestaurantDeals(String restaurant) {
+    List<String> deals = new ArrayList<>();
+    
+    Query query = new Query("Deal").setFilter(new Query.FilterPredicate("restaurant", FilterOperator.EQUAL, restaurant));
+    PreparedQuery results = datastore.prepare(query);
+      
+    for (Entity entity : results.asIterable()) {
+      try {
+        deals.add((String) entity.getProperty("text"));
+      } catch (Exception e) {
+        System.err.println("Error reading deal.");
+        System.err.println(entity.toString());
+        e.printStackTrace();
+      }
+    }
+    
+    return deals;
+  }
+  
   public List<Restaurant> getAllRestaurants() {
     List<Restaurant> restaurants = new ArrayList<>();
 

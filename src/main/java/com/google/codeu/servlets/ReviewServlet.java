@@ -78,7 +78,7 @@ public class ReviewServlet extends HttpServlet {
 
     String user = userService.getCurrentUser().getEmail();
     String text = Jsoup.clean(request.getParameter("text"), Whitelist.none());
-    UUID restaurantId = UUID.fromString(Jsoup.clean(request.getParameter("restaurant-id"), Whitelist.none()));
+    UUID restaurantId = UUID.fromString(Jsoup.clean(request.getParameter("restaurant-id-review"), Whitelist.none()));
 
     Review review = new Review(user, restaurantId, text, 5, System.currentTimeMillis());
     datastore.storeReview(review);

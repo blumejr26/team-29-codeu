@@ -76,14 +76,23 @@ limitations under the License.
     </div>
 -->
 
-    <div id="deals"></div>
+    <div id="deals">
+      <p>Deals:</p>
+      <p>Add a deal? </p>
+      <form id="deal-form" action="/deals" method="POST">
+        <input type="hidden" name="restaurant-id-deal" id="restaurant-id-deal">
+        <input type="hidden" name="restaurant-name-deal" id="restaurant-name-deal">
+        <textarea name="text" rows="2" cols="80" id="deal-text"></textarea>
+        <br/>
+        <input type="submit" value="Submit">
+      </form> 
+    </div>
+    <hr>
     <div id="reviews">
       <p>Reviews:</p>
-      <p>Add a review: </p>
+      <p>Add a review? </p>
       <form id="review-form" action="/reviews" method="POST">
-        <input type="hidden" name="restaurant-id" id="restaurant-id">
-        Enter a review:
-        <br/>
+        <input type="hidden" name="restaurant-id-review" id="restaurant-id-review">
         <textarea name="text" rows="5" cols="80" id="review-text"></textarea>
         <br/>
         <input type="submit" value="Submit">
