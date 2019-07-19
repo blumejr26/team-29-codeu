@@ -27,7 +27,7 @@ public class RestaurantPageServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     response.setContentType("application/json");
-    
+    System.out.println("and we're back here");
     try {
       String id = request.getParameter("id");
       Restaurant restaurant = datastore.getRestaurant(id);

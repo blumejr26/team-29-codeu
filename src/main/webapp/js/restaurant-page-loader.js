@@ -40,6 +40,9 @@ function loadRestaurantData() {
           reviewsDiv.appendChild(document.createTextNode('There are no reviews for this restaurant!'));
         }
         else {
+          reviewsDiv.appendChild(document.createTextNode('This restaurant has '+reviews.length.toString()+ ' reviews.'));
+          console.log(restaurant.averageRating);
+          reviewsDiv.appendChild(document.createTextNode('Average Rating: '+restaurant.averageRating.toString()));
           reviews.forEach((review) => {
             const userDiv = document.createElement('div');
             userDiv.innerHTML = review.user;

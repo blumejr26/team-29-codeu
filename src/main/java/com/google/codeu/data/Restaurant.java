@@ -11,6 +11,8 @@ public class Restaurant {
   private double lat;
   private double lng;
   private String category;
+  private long numberOfReviews;
+  private double averageRating;
   
   public Restaurant(UUID id, String name, String address, int zipcode, double lat, double lng, String category) {
     this.id = id;
@@ -20,6 +22,8 @@ public class Restaurant {
     this.lat = lat;
     this.lng = lng;
     this.category = category;
+    this.numberOfReviews = 0;
+    this.averageRating = 0.0;
   }
   
   public UUID getId() {
@@ -48,5 +52,21 @@ public class Restaurant {
   
   public String getCategory() {
     return category;
+  }
+  
+  public long getNumberOfReviews() {
+    return numberOfReviews;
+  }
+  
+  public double getAverageRating() {
+    return averageRating;
+  }
+  
+  public void setNumberOfReviews(long n) {
+    numberOfReviews = n;
+  }
+  
+  public void setAverageRating(double r) {
+    averageRating = r;
   }
 }

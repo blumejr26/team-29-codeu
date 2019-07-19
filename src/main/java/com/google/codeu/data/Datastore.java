@@ -127,6 +127,8 @@ public class Datastore {
     restaurantEntity.setProperty("latitude", restaurant.getLatitude());
     restaurantEntity.setProperty("longitude", restaurant.getLongitude());
     restaurantEntity.setProperty("category", restaurant.getCategory());
+    restaurantEntity.setProperty("numReviews", restaurant.getNumberOfReviews());
+    restaurantEntity.setProperty("avgRating", restaurant.getAverageRating());
     datastore.put(restaurantEntity);
   }
   
@@ -147,6 +149,20 @@ public class Datastore {
     reviewEntity.setProperty("text", review.getText());
     reviewEntity.setProperty("rating", review.getRating());
     reviewEntity.setProperty("timestamp", review.getTimestamp());
+    
+    try {
+      Restaurant restaurant = getRestaurant(review.getRestaurant().toString());
+      long n = restaurant.getNumberOfReviews();
+      double r = restaurant.getAverageRating();
+      restaurant.setNumberOfReviews(n+1);
+      restaurant.setAverageRating((n*r)/(n+1));
+      storeRestaurant(restaurant);
+      System.out.println("************** restaurant found! ****************");
+    }
+    catch (Exception e) {
+      // this should never happen
+      System.out.println("************** restaurant not found? ****************");
+    }
 
     datastore.put(reviewEntity);
   }  
