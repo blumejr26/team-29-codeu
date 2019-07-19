@@ -175,6 +175,8 @@ function initialize() {
       document.getElementById('results-container').innerHTML = "we don't recognize this location :(";
     }
   });
+  
+  document.getElementById('search-value').value = address;
 
   var selectSortKey = document.getElementById('selectSortKey');
   selectSortKey.addEventListener('change', function() {

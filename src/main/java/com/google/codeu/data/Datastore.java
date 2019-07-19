@@ -129,6 +129,15 @@ public class Datastore {
     restaurantEntity.setProperty("category", restaurant.getCategory());
     datastore.put(restaurantEntity);
   }
+  
+  public void storeRequestedRestaurant(RequestedRestaurant restaurant) {
+    Entity restaurantEntity = new Entity("RequestedRestaurant", restaurant.getId().toString());
+    restaurantEntity.setProperty("name", restaurant.getName());
+    restaurantEntity.setProperty("city", restaurant.getCity());
+    restaurantEntity.setProperty("user", restaurant.getUser());
+    datastore.put(restaurantEntity);
+  }
+  
 
   /** Stores the Message in Datastore. */
   public void storeReview(Review review) {

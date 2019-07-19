@@ -39,16 +39,6 @@ public class RestaurantPageServlet extends HttpServlet {
       response.getWriter().println("");
     }
     
-    
-//    List<Restaurant> restaurants = datastore.getRestaurant(name);
-//    if (restaurants.size() == 0) {
-//      response.getWriter().println("");
-//    }
-//    else {
-//      Gson gson = new Gson();
-//      String json = gson.toJson(restaurants.get(0));
-//      response.getWriter().println(json);
-//    }
   }
 
 }
