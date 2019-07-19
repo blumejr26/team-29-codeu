@@ -98,6 +98,14 @@ public class Datastore {
     }
     return users;
   }
+  
+  public void storeFavorites(Favorite fav) {
+    Entity favEntity = new Entity("Favorite");
+    favEntity.setProperty("restaurantId", fav.getRestaurantId());
+    favEntity.setProperty("restaurantName", fav.getRestaurantName());
+    favEntity.setProperty("user", fav.getUser());
+    datastore.put(favEntity);
+  }
 
   public void storeDeal(String restaurant, String deal) {
     Entity dealEntity = new Entity("Deal");
@@ -140,6 +148,26 @@ public class Datastore {
     datastore.put(messageEntity);
   }
 
+  
+  public List<Favorite> getUserFavorites(String user) {
+    List<Favorite> favs = new ArrayList<>();
+    
+    Query query = new Query("Deal").setFilter(new Query.FilterPredicate("user", FilterOperator.EQUAL, user));
+    PreparedQuery results = datastore.prepare(query);
+      
+    for (Entity entity : results.asIterable()) {
+      try {
+        Favorite fav = new Favorite(user, (String) entity.getProperty("restaurantId"), (String) entity.getProperty("restaurantName"));
+        favs.add(fav);
+      } catch (Exception e) {
+        System.err.println("Error reading favorites.");
+        System.err.println(entity.toString());
+        e.printStackTrace();
+      }
+    }
+    
+    return favs;
+  } 
   /**
    * Gets messages posted by a specific user.
    *

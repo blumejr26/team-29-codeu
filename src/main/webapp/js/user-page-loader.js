@@ -32,4 +32,17 @@ function setPageTitle() {
 /** Fetches data and populates the UI of the page. */
 function buildUI() {
   setPageTitle();
+  fetch('/favorites?user='+parameterUsername).then(function(response) {
+    return response.json();
+  }).then(favIds => {
+    if (favIds.length === 0) {
+      document.getElementById('favorites').appendChild(document.createTextNode('You have no favorites!'));
+    } else {
+      favIds.forEach(fav => {
+        const link = document.createElement('a');
+        link.appendChild(document.createTextNode(fav.restaurantName));
+        link.href = '/restaurant-page.html?id='+fav.restaurantId;
+      });
+    }
+  });
 }
