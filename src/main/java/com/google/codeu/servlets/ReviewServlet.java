@@ -23,6 +23,7 @@ import com.google.codeu.data.Review;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -50,37 +51,38 @@ public class ReviewServlet extends HttpServlet {
 
     response.setContentType("application/json");
 
-    String restaurant = request.getParameter("restaurant");
+    String restaurantId = request.getParameter("restaurant");
 
-    if (restaurant == null || restaurant.equals("")) {
+    if (restaurantId == null || restaurantId.equals("")) {
       // Request is invalid, return empty array
       response.getWriter().println("[]");
       return;
     }
 
-    List<Review> reviews = datastore.getReviews(restaurant);
+    List<Review> reviews = datastore.getReviews(restaurantId);
     Gson gson = new Gson();
     String json = gson.toJson(reviews);
 
     response.getWriter().println(json);
   }
 
-//  /** Stores a new {@link Message}. */
-//  @Override
-//  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-//
-//    UserService userService = UserServiceFactory.getUserService();
-//    if (!userService.isUserLoggedIn()) {
-//      response.sendRedirect("/index.html");
-//      return;
-//    }
-//
-//    String user = userService.getCurrentUser().getEmail();
-//    String text = Jsoup.clean(request.getParameter("text"), Whitelist.none());
-//
-//    Message message = new Message(user, text);
-//    datastore.storeMessage(message);
-//
-//    response.sendRedirect("/user-page.html?user=" + user);
-//  }
+  /** Stores a new {@link Message}. */
+  @Override
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+    UserService userService = UserServiceFactory.getUserService();
+    if (!userService.isUserLoggedIn()) {
+      response.sendRedirect("/index.html");
+      return;
+    }
+
+    String user = userService.getCurrentUser().getEmail();
+    String text = Jsoup.clean(request.getParameter("text"), Whitelist.none());
+    UUID restaurantId = UUID.fromString(Jsoup.clean(request.getParameter("restaurant-id"), Whitelist.none()));
+
+    Review review = new Review(user, restaurantId, text, 5, System.currentTimeMillis());
+    datastore.storeReview(review);
+
+    response.sendRedirect("/restaurant-page.html?id=" + restaurantId.toString());
+  }
 }

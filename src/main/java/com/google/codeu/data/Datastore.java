@@ -105,7 +105,7 @@ public class Datastore {
   public void storeReview(Review review) {
     Entity reviewEntity = new Entity("Review", review.getId().toString());
     reviewEntity.setProperty("user", review.getUser());
-    reviewEntity.setProperty("restaurant", review.getRestaurant());
+    reviewEntity.setProperty("restaurant", review.getRestaurant().toString());
     reviewEntity.setProperty("text", review.getText());
     reviewEntity.setProperty("rating", review.getRating());
     reviewEntity.setProperty("timestamp", review.getTimestamp());
@@ -196,10 +196,10 @@ public class Datastore {
     
   }
   
-  public List<Review> getReviews(String restaurant) {
+  public List<Review> getReviews(String restaurantId) {
     List<Review> reviews = new ArrayList<>();
 
-    Query query = new Query("Review").setFilter(new Query.FilterPredicate("restaurant", FilterOperator.EQUAL, restaurant))
+    Query query = new Query("Review").setFilter(new Query.FilterPredicate("restaurant", FilterOperator.EQUAL, restaurantId))
             .addSort("timestamp", SortDirection.DESCENDING);
     PreparedQuery results = datastore.prepare(query);
 
@@ -209,7 +209,7 @@ public class Datastore {
         String text = (String) entity.getProperty("text");
         int rating = ((Long) entity.getProperty("rating")).intValue();
         long timestamp = (long) entity.getProperty("timestamp");
-        Review review = new Review(user, restaurant, text, rating, timestamp);
+        Review review = new Review(user, UUID.fromString(restaurantId), text, rating, timestamp);
         reviews.add(review);
       } catch (Exception e) {
         System.err.println("Error loading restaurants.");

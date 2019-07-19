@@ -78,6 +78,16 @@ function distance(lat1, lng1, lat2, lng2) {
 
 function sortBy(key) {
   return function(a, b) {
+    if (key === 'distance') {
+      var distA = distance(parseFloat(parameterLatitude), parseFloat(parameterLongitude), a.lat, a.lng);
+      var distB = distance(parseFloat(parameterLatitude), parseFloat(parameterLongitude), a.lat, a.lng)
+      if (distA > distB) {
+        return 1;
+      } else if (distA < distB) {
+        return -1;
+      }
+      return 0;
+    }
     if (a[key] > b[key]) {
       return 1;
     } else if (a[key] < b[key]) {

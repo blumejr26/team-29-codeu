@@ -2,7 +2,7 @@ const urlParams = new URLSearchParams(window.location.search);
 const id = urlParams.get('id');
 
 function loadRestaurantData() {
-  fetch('/restaurant?id='+id.toString()).then(function(response) {
+  fetch('/restaurant?id='+id).then(function(response) {
     return response.json();
   }).then((restaurant) => {
     if (restaurant === '') {
@@ -10,15 +10,16 @@ function loadRestaurantData() {
     }
     else {
       document.getElementById('name').innerHTML = restaurant.name;
-      document.getElementById('address').innerHTML = restaurant.address + ', ' + restaurant.zipcode.toString();
+      document.getElementById('address').appendChild(document.createTextNode("Address: "+restaurant.address+", "+restaurant.zipcode.toString()));
       document.getElementById('deals').innerHTML = "Deals: ";
-      document.getElementById('reviews').innerHTML = "Reviews: ";
-      fetch('/reviews?restaurant='+restaurant.name).then(function(response) {
+//      document.getElementById('reviews').innerHTML = "Reviews: ";
+      document.getElementById('restaurant-id').value = id;
+      fetch('/reviews?restaurant='+id).then(function(response) {
         return response.json();
       }).then((reviews) => {
         const reviewsDiv = document.createElement('div');
         if (reviews.length === 0) {
-          reviewsDiv.innerHTML = 'There are no reviews for this restaurant!';
+          reviewsDiv.appendChild(document.createTextNode('There are no reviews for this restaurant!'));
         }
         else {
           reviews.forEach((review) => {
@@ -29,8 +30,8 @@ function loadRestaurantData() {
             const textDiv = document.createElement('div');
             textDiv.innerHTML = review.text;
             reviewsDiv.appendChild(userDiv);
-            reviewsDiv.appendChild(userDiv);
-            reviewsDiv.appendChild(userDiv);
+            reviewsDiv.appendChild(timeDiv);
+            reviewsDiv.appendChild(textDiv);
           });
         }
         document.getElementById('reviews').appendChild(reviewsDiv);

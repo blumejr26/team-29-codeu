@@ -59,20 +59,36 @@ limitations under the License.
     <!-- Temporary desciption --> 
 <!--    <p> Restaurant 1 is perfect for a midweek grab and go lunch. A healthy option to power you through the rest of the day that wont break the bank! Known for "create your own" sandwhiches, paninis and salads you will find an array of mix and match options to fit your personal taste </p>-->
 
-    <!-- Temp Address --> 
-    <img src = "icons8-marker-50.png"> </img>
-    <p id="address"></p>
+    <!-- Temp Address -->
+    <div id="address"></div>
     
     <!-- Temp Phone Number -->
-    <img src = "icons8-phone-50.png"> </img>
-    <p id="phone"></p>
-
+<!--
+    <div id="phone">
+      <img src = "icons8-phone-50.png"> </img>
+    </div>
+    
+-->
     <!-- Temp Hours --> 
-    <img src = "icons8-time-50.png"> </img>
-    <p id="hours"></p>
+<!--
+    <div id="hours">
+      <img src = "icons8-time-50.png"> </img>
+    </div>
+-->
 
     <div id="deals"></div>
-    <div id="reviews"></div>
+    <div id="reviews">
+      <p>Reviews:</p>
+      <p>Add a review: </p>
+      <form id="review-form" action="/reviews" method="POST">
+        <input type="hidden" name="restaurant-id" id="restaurant-id">
+        Enter a review:
+        <br/>
+        <textarea name="text" rows="5" cols="80" id="review-text"></textarea>
+        <br/>
+        <input type="submit" value="Submit">
+      </form> 
+    </div>
 
     <!--script for slide show --> 
 <!--
