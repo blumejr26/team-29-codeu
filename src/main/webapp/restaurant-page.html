@@ -93,6 +93,7 @@ limitations under the License.
       <p>Add a review? </p>
       <form id="review-form" action="/reviews" method="POST">
         <input type="hidden" name="restaurant-id-review" id="restaurant-id-review">
+        Rating: <input type="range" name="rating" id="searchRadius" min="0" max="5" step="1" value="0">
         <textarea name="text" rows="5" cols="80" id="review-text"></textarea>
         <br/>
         <input type="submit" value="Submit">

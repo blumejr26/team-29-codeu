@@ -47,9 +47,12 @@ function loadRestaurantData() {
             timeDiv.appendChild(document.createTextNode(new Date(review.timestamp)));
             const textDiv = document.createElement('div');
             textDiv.innerHTML = review.text;
+            const ratingDiv = document.createElement('div');
+            ratingDiv.appendChild(document.createTextNode('Rating: '+review.rating.toString()));
             reviewsDiv.appendChild(userDiv);
             reviewsDiv.appendChild(timeDiv);
             reviewsDiv.appendChild(textDiv);
+            reviewsDiv.appendChild(ratingDiv);
           });
         }
         document.getElementById('reviews').appendChild(reviewsDiv);
