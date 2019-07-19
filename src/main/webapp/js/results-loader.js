@@ -11,13 +11,13 @@ let map;
 
 
 
-function createRestaurantMarker(map, lat, lng, name, address, zipcode) {
+function createRestaurantMarker(map, id, lat, lng, name, address, zipcode) {
   const marker = new google.maps.Marker({
     position: {lat: lat, lng: lng},
     map: map,
     title: name
   });
-  var info = '<h3>'+name+'</h3>'+'<p>'+address+', '+zipcode.toString(10)+'</p>';
+  var info = '<h3><a href=/restaurant-page.html?id='+id+'>'+name+'</a></h3>'+'<p>'+address+', '+zipcode.toString(10)+'</p>';
   var infoWindow = new google.maps.InfoWindow({
     content: info
   });
@@ -46,7 +46,7 @@ function filterAndDisplayResults() {
         markersDict[restaurant.name].setMap(map);
       }
       else {
-        createRestaurantMarker(map, restaurant.lat, restaurant.lng, restaurant.name, restaurant.address, restaurant.zipcode);
+        createRestaurantMarker(map, restaurant.id, restaurant.lat, restaurant.lng, restaurant.name, restaurant.address, restaurant.zipcode);
       }
       //List each restaurant
       const restaurantDiv = buildRestaurantDiv(restaurant, dist);
@@ -57,7 +57,7 @@ function filterAndDisplayResults() {
         markersDict[restaurant.name].setMap(null);
       }
       else {
-        createRestaurantMarker(null, restaurant.lat, restaurant.lng, restaurant.name, restaurant.address, restaurant.zipcode);
+        createRestaurantMarker(null, restaurant.id, restaurant.lat, restaurant.lng, restaurant.name, restaurant.address, restaurant.zipcode);
       }
     }
   });
