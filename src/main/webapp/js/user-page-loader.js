@@ -17,6 +17,7 @@
 // Get ?user=XYZ parameter value
 const urlParams = new URLSearchParams(window.location.search);
 const parameterUsername = urlParams.get('user');
+const admins = ["test@example.com", "urviagrawal99@gmail.com"];
 
 // URL must include ?user=XYZ parameter. If not, redirect to homepage.
 if (!parameterUsername) {
@@ -32,4 +33,33 @@ function setPageTitle() {
 /** Fetches data and populates the UI of the page. */
 function buildUI() {
   setPageTitle();
+  fetch('/favorites?user='+parameterUsername).then(function(response) {
+    return response.json();
+  }).then(favIds => {
+    if (favIds.length === 0) {
+      document.getElementById('favorites').appendChild(document.createTextNode('You have no favorites!'));
+    } else {
+      favIds.forEach(fav => {
+        const link = document.createElement('a');
+        link.appendChild(document.createTextNode(fav.restaurantName));
+        link.href = '/restaurant-page.html?id='+fav.restaurantId;
+        document.getElementById('favorites').appendChild(link);
+      });
+    }
+  });
+  fetch('/requested-restaurants').then(function(response) {
+    return response.json();
+  }).then(restaurants => {
+    if (restaurants.length !== 0) {
+      const adminDiv = document.getElementById('admin-only');
+      const div = document.createElement('div');
+      div.innerHTML = '<h3>Requested Restaurants</h3>';
+      adminDiv.appendChild(div);
+      restaurants.forEach(restaurant => {
+        const d = document.createElement('div');
+        d.innerHTML = restaurant.name + '   |   ' + restaurant.city;
+        adminDiv.appendChild(d);
+      });
+    }
+  });
 }

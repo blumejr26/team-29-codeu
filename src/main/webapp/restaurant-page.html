@@ -26,22 +26,21 @@ limitations under the License.
       .w3-badge {height:13px;width:13px;padding:0}
     </style>
     <script src="/js/navigation-loader.js"></script>
+    <script src="/js/restaurant-page-loader.js"></script>
   </head>
-  <body>
+  <body onload="addLoginOrLogoutLinkToNavigation(); loadRestaurantData();">
     <nav>
       <ul id="navigation">
         <li><a href="/">Home</a></li>
+        <li><a href="/search-results.html">Search</a></li>
         <li><a href="/aboutus.html">About Our Team</a></li>
       </ul>
     </nav>
-    <h1>Restaurant 1</h1>
-    <p> 
-    	<b> "We believe the choices we make about what we eat, where it comes from and how it’s prepared have a direct and powerful impact on the health of individuals, communities and the environment." - Restaurant 1
-    	</b>
-    </p>
-    <p> temporary pics for slide show of 3 signature orders </p>
+    <h1 id="name"></h1>
+<!--    <p> temporary pics for slide show of 3 signature orders </p>-->
 
     <!-- slide show  of signature orders -->
+<!--
     <div class="w3-content w3-display-container" style="max-width:800px">
       <img class="mySlides" src="food-fries-sandwich-262892.jpg" style = "width: 100%">
       <img class="mySlides" src="dinner-egg-flatlay-54455.jpg" style = "width: 100%">
@@ -56,23 +55,63 @@ limitations under the License.
     </div>
 
     <h3> Info </h3>
+-->
 
     <!-- Temporary desciption --> 
-    <p> Restaurant 1 is perfect for a midweek grab and go lunch. A healthy option to power you through the rest of the day that wont break the bank! Known for "create your own" sandwhiches, paninis and salads you will find an array of mix and match options to fit your personal taste </p>
+<!--    <p> Restaurant 1 is perfect for a midweek grab and go lunch. A healthy option to power you through the rest of the day that wont break the bank! Known for "create your own" sandwhiches, paninis and salads you will find an array of mix and match options to fit your personal taste </p>-->
 
-    <!-- Temp Address --> 
-    <img src = "icons8-marker-50.png"> </img>
-    <p> 1600 K street Washington DC 20059 </p>
+    <!-- Temp Address -->
+    <div id="address"></div>
     
     <!-- Temp Phone Number -->
-    <img src = "icons8-phone-50.png"> </img>
-    <p> 202-543-9876 </p>
-
+<!--
+    <div id="phone">
+      <img src = "icons8-phone-50.png"> </img>
+    </div>
+    
+-->
     <!-- Temp Hours --> 
-    <img src = "icons8-time-50.png"> </img>
-    <p> Mon - Fri: 10am - 9pm Sat & Sun: 10am - 6pm </p>
+<!--
+    <div id="hours">
+      <img src = "icons8-time-50.png"> </img>
+    </div>
+-->
+
+    <div id="deals">
+      <p>Deals:</p>
+      <p>Add a deal? </p>
+      <form id="deal-form" action="/deals" method="POST">
+        <input type="hidden" name="restaurant-id-deal" id="restaurant-id-deal">
+        <input type="hidden" name="restaurant-name-deal" id="restaurant-name-deal">
+        <textarea name="text" rows="2" cols="80" id="deal-text"></textarea>
+        <br/>
+        <input type="submit" value="Submit">
+      </form> 
+    </div>
+    <hr>
+    <div id="reviews">
+      <p>Reviews:</p>
+      <p>Add a review? </p>
+      <form id="review-form" action="/reviews" method="POST">
+        <input type="hidden" name="restaurant-id-review" id="restaurant-id-review">
+        Rating: <input type="range" name="rating" id="searchRadius" min="0" max="5" step="1" value="0">
+        <textarea name="text" rows="5" cols="80" id="review-text"></textarea>
+        <br/>
+        <input type="submit" value="Submit">
+      </form> 
+    </div>
+    <hr>
+    <div id="favorites">
+      <form id="fav-form" action="/favorites" method="POST">
+        <input type="hidden" name="restaurant-id-fav" id="restaurant-id-fav">
+        <input type="hidden" name="restaurant-name-fav" id="restaurant-name-fav">
+        <input type="hidden" name="mode" id="fav-mode">
+        <input type="submit" id="fav-button">
+      </form>
+    </div>
 
     <!--script for slide show --> 
+<!--
     <script>
       var slideIndex = 1;
       showDivs(slideIndex);
@@ -103,5 +142,6 @@ limitations under the License.
             dots[slideIndex-1].className += " w3-white";
           }
         </script>
+-->
   </body>
 </html>

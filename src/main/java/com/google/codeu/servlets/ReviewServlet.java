@@ -19,10 +19,11 @@ package com.google.codeu.servlets;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.codeu.data.Datastore;
-import com.google.codeu.data.Message;
+import com.google.codeu.data.Review;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -31,8 +32,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 
 /** Handles fetching and saving {@link Message} instances. */
-@WebServlet("/messages")
-public class MessageServlet extends HttpServlet {
+@WebServlet("/reviews")
+public class ReviewServlet extends HttpServlet {
 
   private Datastore datastore;
 
@@ -50,17 +51,17 @@ public class MessageServlet extends HttpServlet {
 
     response.setContentType("application/json");
 
-    String user = request.getParameter("user");
+    String restaurantId = request.getParameter("restaurant");
 
-    if (user == null || user.equals("")) {
+    if (restaurantId == null || restaurantId.equals("")) {
       // Request is invalid, return empty array
       response.getWriter().println("[]");
       return;
     }
 
-    List<Message> messages = datastore.getMessages(user);
+    List<Review> reviews = datastore.getReviews(restaurantId);
     Gson gson = new Gson();
-    String json = gson.toJson(messages);
+    String json = gson.toJson(reviews);
 
     response.getWriter().println(json);
   }
@@ -77,10 +78,12 @@ public class MessageServlet extends HttpServlet {
 
     String user = userService.getCurrentUser().getEmail();
     String text = Jsoup.clean(request.getParameter("text"), Whitelist.none());
+    int rating = Integer.parseInt(Jsoup.clean(request.getParameter("rating"), Whitelist.none()));
+    UUID restaurantId = UUID.fromString(Jsoup.clean(request.getParameter("restaurant-id-review"), Whitelist.none()));
 
-    Message message = new Message(user, text);
-    datastore.storeMessage(message);
+    Review review = new Review(user, restaurantId, text, rating, System.currentTimeMillis());
+    datastore.storeReview(review);
 
-    response.sendRedirect("/user-page.html?user=" + user);
+    response.sendRedirect("/restaurant-page.html?id=" + restaurantId.toString());
   }
 }

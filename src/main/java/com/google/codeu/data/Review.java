@@ -22,7 +22,7 @@ import java.util.UUID;
 public class Review {
 
   private UUID id;
-  private String restaurant;
+  private UUID restaurant;
   private String user;
   private String text;
   private int rating;
@@ -32,7 +32,7 @@ public class Review {
    * Constructs a new {@link Message} posted by {@code user} with {@code text} content. Generates a
    * random ID and uses the current system time for the creation time.
    */
-  public Review(String user, String restaurant, String text, int rating, long timestamp) {
+  public Review(String user, UUID restaurant, String text, int rating, long timestamp) {
     this.id = UUID.randomUUID();
     this.restaurant = restaurant;
     this.user = user;
@@ -49,7 +49,7 @@ public class Review {
     return user;
   }
 
-  public String getRestaurant() {
+  public UUID getRestaurant() {
     return restaurant;
   }
   

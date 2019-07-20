@@ -11,13 +11,13 @@ let map;
 
 
 
-function createRestaurantMarker(map, lat, lng, name, address, zipcode) {
+function createRestaurantMarker(map, id, lat, lng, name, address, zipcode) {
   const marker = new google.maps.Marker({
     position: {lat: lat, lng: lng},
     map: map,
     title: name
   });
-  var info = '<h3>'+name+'</h3>'+'<p>'+address+', '+zipcode.toString(10)+'</p>';
+  var info = '<h3><a href=/restaurant-page.html?id='+id+'>'+name+'</a></h3>'+'<p>'+address+', '+zipcode.toString(10)+'</p>';
   var infoWindow = new google.maps.InfoWindow({
     content: info
   });
@@ -46,7 +46,7 @@ function filterAndDisplayResults() {
         markersDict[restaurant.name].setMap(map);
       }
       else {
-        createRestaurantMarker(map, restaurant.lat, restaurant.lng, restaurant.name, restaurant.address, restaurant.zipcode);
+        createRestaurantMarker(map, restaurant.id, restaurant.lat, restaurant.lng, restaurant.name, restaurant.address, restaurant.zipcode);
       }
       //List each restaurant
       const restaurantDiv = buildRestaurantDiv(restaurant, dist);
@@ -57,7 +57,7 @@ function filterAndDisplayResults() {
         markersDict[restaurant.name].setMap(null);
       }
       else {
-        createRestaurantMarker(null, restaurant.lat, restaurant.lng, restaurant.name, restaurant.address, restaurant.zipcode);
+        createRestaurantMarker(null, restaurant.id, restaurant.lat, restaurant.lng, restaurant.name, restaurant.address, restaurant.zipcode);
       }
     }
   });
@@ -78,6 +78,16 @@ function distance(lat1, lng1, lat2, lng2) {
 
 function sortBy(key) {
   return function(a, b) {
+    if (key === 'distance') {
+      var distA = distance(parseFloat(parameterLatitude), parseFloat(parameterLongitude), a.lat, a.lng);
+      var distB = distance(parseFloat(parameterLatitude), parseFloat(parameterLongitude), a.lat, a.lng)
+      if (distA > distB) {
+        return 1;
+      } else if (distA < distB) {
+        return -1;
+      }
+      return 0;
+    }
     if (a[key] > b[key]) {
       return 1;
     } else if (a[key] < b[key]) {
@@ -102,8 +112,8 @@ function buildRestaurantDiv(restaurant, dist) {
   const nameLink = document.createElement('a');
   nameLink.classList.add('restaurant-name');
   nameLink.appendChild(document.createTextNode(restaurant.name));
-//  nameLink.href = '/restaurant-page.html?name=' + restaurant.name; // for the generic link
-  nameLink.href = '/restaurant1.html';  // using the static single restaurant page link for now
+  nameLink.href = '/restaurant-page.html?id=' + restaurant.id; // for the generic link
+//  nameLink.href = '/restaurant1.html';  // using the static single restaurant page link for now
 
   const addressDiv = document.createElement('div');
   addressDiv.classList.add('restaurant-address');
@@ -150,7 +160,7 @@ function initialize() {
       });
       markersDict["user-search"] = searchMarker;
 
-      fetch('/restaurant-data?latitude='+parameterLatitude+'&longitude='+parameterLongitude).then(function(response) {
+      fetch('/results?latitude='+parameterLatitude+'&longitude='+parameterLongitude).then(function(response) {
         return response.json();
       }).then((restaurants) => {
         restaurantsList = restaurants;
@@ -165,6 +175,8 @@ function initialize() {
       document.getElementById('results-container').innerHTML = "we don't recognize this location :(";
     }
   });
+  
+  document.getElementById('search-value').value = address;
 
   var selectSortKey = document.getElementById('selectSortKey');
   selectSortKey.addEventListener('change', function() {
