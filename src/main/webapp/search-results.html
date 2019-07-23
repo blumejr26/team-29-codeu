@@ -2,14 +2,25 @@
 <html>
 <head>
   <title>Restaurants Results</title>
-  <link rel="stylesheet" href="/css/main.css">
+  <!-- <link rel="stylesheet" href="/css/home.css"> -->
   <link rel="stylesheet" href="/css/results-page.css">
+  <script src="/js/navigation-loader.js"></script>
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCTRQ-3PrBBM1ZUThSjUE6p6Zet1sjcapk&libraries=places"></script>
   <script src="/js/results-loader.js"></script>
 </head>
 <body onload="initialize();">
+<nav>
+  <ul id="navigation">
+    <li><a href="/">HOME</a></li>
+    <li><a href="/search-results.html">SEARCH</a></li>
+    <li><a href="/aboutus.html">OUR TEAM</a></li>
+    <li><a href="/user-page.html"> YOUR PAGE</a></li>
+  </ul>
+</nav>
+<h1> CHEAP EATS </h1>
+<h2>RESTAURANTS IN YOUR AREA</h2>
   <form id="search-form" action="/search" method="GET">
-    Enter a location:
+    ENTER A LOCATION:
     <br/>
 <!--
     <textarea name="latitude" id="search-input" placeholder="latitude"></textarea>
@@ -17,16 +28,18 @@
 -->
     <textarea name="location" id="search-input" placeholder="Current Location"></textarea>
     <br/>
-    <input type="submit" value="Search">
+    <input type="submit" value="SEARCH">
   </form> 
-  Sort By: 
+  SORT BY:
   <select id="selectSortKey">
-    <option value="distance">Distance</option>
+    <option value="distance">DISTANCE</option>
   </select>
-  Search Radius: 
+  SEARCH RADIUS:
   <input type="range" id="searchRadius" min="0.1" max="5" step="0.1" value="2">
-  <h1>Restaurants in your area</h1>
-  <div id="map"></div>
-  <div id="results-container">Loading...</div>
+
+    <div id="map"></div>
+    <div id="results-container">LOADING...</div>
+
+
 </body>
 </html>

@@ -14,6 +14,55 @@
  * limitations under the License.
  */
 
+h1{
+  text-align: center;
+  font-size: 35pt;
+}
+h2{
+  text-align: center;
+  font-size: 12pt;
+}
+
+/* Prevent the page from becoming too wide. */
+/*body {
+  max-width: 600px;
+  /*margin-left: 20%;*/
+/*margin-right: 20%;*/
+/*margin-top: 20px;*/
+/*margin-bottom: 20px;*/
+/* max-width: 700px;
+ width: 80%;
+ margin: 20px auto;
+ padding-left: 2%;
+ padding-right: 2%;
+} */
+
+
+body {
+  background: white fixed;
+  font-family: Helvetica;
+  font-size:11pt;
+}
+
+/* Remove bullet points from navigation bar. */
+nav ul {
+  text-align: center;
+  list-style-type: none;
+  padding-left: 0;
+}
+
+/* Keep navigation menu on one line. */
+nav li {
+  text-align: center;
+  display: inline-block;
+  margin-right: 10px
+}
+
+#map {
+  width: 500px;
+  height: 500px;
+  border: thin solid black;
+}
 /* Give each message a rounded border. */
 .restaurant-div {
   border: thin solid black;

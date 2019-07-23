@@ -18,15 +18,29 @@
    and will fill the width of its parent element. */
 
 body {
-  margin: 0;
   background: white fixed;
   font-family: Helvetica;
+  font-size:11pt;
 }
 
+/* Remove bullet points from navigation bar. */
+nav ul {
+  text-align: center;
+  list-style-type: none;
+  padding-left: 0;
+}
+
+/* Keep navigation menu on one line. */
+nav li {
+  text-align: center;
+  display: inline-block;
+  margin-right: 10px
+}
+/*
 nav {
   font-family: Helvetica;
   background-color: #d3d3d3;
-  font-size: 18pt;
+  font-size: 10pt;
   padding: 10px;
 }
 
@@ -34,16 +48,30 @@ nav a {
   color: black;
   margin-right: 10px;
 }
+/*
+ */
+h1 {
+  font-family: Helvetica;
+  font-size:35pt;
+}
 
 h2 {
+  text-align: center;
+  font-family: Helvetica;
+  font-size: 12pt;
+}
+
+h3 {
   margin: 0;
 }
 
 input[type=submit] {
-  background-color: #ccccff;
+  background-color: darkgrey;
   height: 50px;
   width: 100px;
+  font-family: Helvetica;
   font-size: 14pt;
+  color: #ffffff;
 }
 
 #content {
@@ -60,7 +88,7 @@ input[type=submit] {
 
 .message-header {
   border-bottom: thin solid black;
-  background-image: linear-gradient(to right, white , #ccccff);
+  /*background-image: linear-gradient(to right, white , #ccccff);*/
 }
 
 .message-body {
@@ -89,3 +117,7 @@ input[type=submit] {
 .hidden {
   display: none;
 }
+
+div.image {
+  content:url();
+}​

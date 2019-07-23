@@ -29,12 +29,14 @@ limitations under the License.
   <body onload="buildUI(); drawChart(); addLoginOrLogoutLinkToNavigation();">
     <nav>
       <ul id="navigation">
-        <li><a href="/">Home</a></li>
-        <li><a href="/search-results.html">Search</a></li>
-        <li><a href="/aboutus.html">About Our Team</a></li>
+        <li><a href="/">HOME</a></li>
+        <li><a href="/search-results.html">SEARCH</a></li>
+        <li><a href="/aboutus.html">OUR TEAM</a></li>
       </ul>
     </nav>
-    <h1 id="page-title">User Page</h1>
+    <h1>CHEAP EATS</h1>
+
+    <h2>USER PAGE</h2>
 
     <form id="search-form" action="/search" method="GET">
       Enter a location:
@@ -45,12 +47,13 @@ limitations under the License.
 -->
       <textarea name="location" id="search-input" placeholder="Current Location"></textarea>
       <br/>
-      <input type="submit" value="Search">
+      <input type="submit" value="SEARCH">
     </form>
     <hr/>
 
-    <h2>Top Rated Restaurants</h2>
+    <h3>TOP RATED RESTAURANTS</h3>
+    <div style="background: beef-burger.jpg">
     <div id="restaurant_chart"></div>
-
+    </div>
   </body>
 </html>
